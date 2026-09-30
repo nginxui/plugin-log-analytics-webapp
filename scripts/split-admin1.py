@@ -127,67 +127,9 @@ def parent_code(cc, p):
     return None
 
 
-# Names of the merged regions: English, Chinese, traditional Chinese, Japanese.
-# The other languages show the English name.
-REGION_NAMES = {
-    "FR-ARA": ("Auvergne-Rhône-Alpes", "奥弗涅-罗讷-阿尔卑斯", "奧弗涅-隆-阿爾卑斯", "オーヴェルニュ＝ローヌ＝アルプ"),
-    "FR-BFC": ("Bourgogne-Franche-Comté", "勃艮第-弗朗什-孔泰", "勃艮第-法蘭琪-康堤", "ブルゴーニュ＝フランシュ＝コンテ"),
-    "FR-BRE": ("Brittany", "布列塔尼", "布列塔尼", "ブルターニュ"),
-    "FR-CVL": ("Centre-Val de Loire", "中央-卢瓦尔河谷", "中央-羅亞爾河谷", "サントル＝ヴァル・ド・ロワール"),
-    "FR-COR": ("Corsica", "科西嘉", "科西嘉", "コルシカ"),
-    "FR-GES": ("Grand Est", "大东部", "大東部", "グラン・テスト"),
-    "FR-HDF": ("Hauts-de-France", "上法兰西", "上法蘭西", "オー＝ド＝フランス"),
-    "FR-IDF": ("Île-de-France", "法兰西岛", "法蘭西島", "イル＝ド＝フランス"),
-    "FR-NOR": ("Normandy", "诺曼底", "諾曼第", "ノルマンディー"),
-    "FR-NAQ": ("Nouvelle-Aquitaine", "新阿基坦", "新阿基坦", "ヌーヴェル＝アキテーヌ"),
-    "FR-OCC": ("Occitanie", "奥克西塔尼", "奧克西塔尼", "オクシタニー"),
-    "FR-PDL": ("Pays de la Loire", "卢瓦尔河地区", "羅亞爾河地區", "ペイ・ド・ラ・ロワール"),
-    "FR-PAC": ("Provence-Alpes-Côte d'Azur", "普罗旺斯-阿尔卑斯-蓝色海岸", "普羅旺斯-阿爾卑斯-蔚藍海岸", "プロヴァンス＝アルプ＝コート・ダジュール"),
-    "IT-21": ("Piedmont", "皮埃蒙特", "皮埃蒙特", "ピエモンテ"),
-    "IT-23": ("Aosta Valley", "瓦莱达奥斯塔", "瓦萊達奧斯塔", "ヴァッレ・ダオスタ"),
-    "IT-25": ("Lombardy", "伦巴第", "倫巴底", "ロンバルディア"),
-    "IT-32": ("Trentino-South Tyrol", "特伦蒂诺-上阿迪杰", "特倫蒂諾-上阿迪傑", "トレンティーノ＝アルト・アディジェ"),
-    "IT-34": ("Veneto", "威尼托", "威尼托", "ヴェネト"),
-    "IT-36": ("Friuli-Venezia Giulia", "弗留利-威尼斯朱利亚", "弗留利-威尼斯朱利亞", "フリウリ＝ヴェネツィア・ジュリア"),
-    "IT-42": ("Liguria", "利古里亚", "利古里亞", "リグーリア"),
-    "IT-45": ("Emilia-Romagna", "艾米利亚-罗马涅", "艾米利亞-羅馬涅", "エミリア＝ロマーニャ"),
-    "IT-52": ("Tuscany", "托斯卡纳", "托斯卡尼", "トスカーナ"),
-    "IT-55": ("Umbria", "翁布里亚", "翁布里亞", "ウンブリア"),
-    "IT-57": ("Marche", "马尔凯", "馬爾凱", "マルケ"),
-    "IT-62": ("Lazio", "拉齐奥", "拉齊奧", "ラツィオ"),
-    "IT-65": ("Abruzzo", "阿布鲁佐", "阿布魯佐", "アブルッツォ"),
-    "IT-67": ("Molise", "莫利塞", "莫利塞", "モリーゼ"),
-    "IT-72": ("Campania", "坎帕尼亚", "坎帕尼亞", "カンパニア"),
-    "IT-75": ("Apulia", "普利亚", "普利亞", "プッリャ"),
-    "IT-77": ("Basilicata", "巴西利卡塔", "巴西利卡塔", "バジリカータ"),
-    "IT-78": ("Calabria", "卡拉布里亚", "卡拉布里亞", "カラブリア"),
-    "IT-82": ("Sicily", "西西里", "西西里", "シチリア"),
-    "IT-88": ("Sardinia", "撒丁", "薩丁尼亞", "サルデーニャ"),
-    "ES-AN": ("Andalusia", "安达卢西亚", "安達魯西亞", "アンダルシア"),
-    "ES-AR": ("Aragon", "阿拉贡", "阿拉貢", "アラゴン"),
-    "ES-AS": ("Asturias", "阿斯图里亚斯", "阿斯圖里亞斯", "アストゥリアス"),
-    "ES-CN": ("Canary Islands", "加那利群岛", "加那利群島", "カナリア諸島"),
-    "ES-CB": ("Cantabria", "坎塔布里亚", "坎塔布里亞", "カンタブリア"),
-    "ES-CL": ("Castile and León", "卡斯蒂利亚-莱昂", "卡斯蒂利亞-萊昂", "カスティーリャ・イ・レオン"),
-    "ES-CM": ("Castilla-La Mancha", "卡斯蒂利亚-拉曼恰", "卡斯蒂利亞-拉曼查", "カスティーリャ＝ラ・マンチャ"),
-    "ES-CT": ("Catalonia", "加泰罗尼亚", "加泰隆尼亞", "カタルーニャ"),
-    "ES-EX": ("Extremadura", "埃斯特雷马杜拉", "埃斯特雷馬杜拉", "エストレマドゥーラ"),
-    "ES-GA": ("Galicia", "加利西亚", "加利西亞", "ガリシア"),
-    "ES-IB": ("Balearic Islands", "巴利阿里群岛", "巴利阿里群島", "バレアレス諸島"),
-    "ES-RI": ("La Rioja", "拉里奥哈", "拉里奧哈", "ラ・リオハ"),
-    "ES-MD": ("Madrid", "马德里", "馬德里", "マドリード"),
-    "ES-MC": ("Murcia", "穆尔西亚", "穆爾西亞", "ムルシア"),
-    "ES-NC": ("Navarre", "纳瓦拉", "納瓦拉", "ナバラ"),
-    "ES-PV": ("Basque Country", "巴斯克", "巴斯克", "バスク"),
-    "ES-VC": ("Valencia", "瓦伦西亚", "瓦倫西亞", "バレンシア"),
-    "GB-ENG": ("England", "英格兰", "英格蘭", "イングランド"),
-    "GB-SCT": ("Scotland", "苏格兰", "蘇格蘭", "スコットランド"),
-    "GB-WLS": ("Wales", "威尔士", "威爾斯", "ウェールズ"),
-    "GB-NIR": ("Northern Ireland", "北爱尔兰", "北愛爾蘭", "北アイルランド"),
-    "BE-BRU": ("Brussels", "布鲁塞尔首都大区", "布魯塞爾首都大區", "ブリュッセル首都圏"),
-    "BE-VLG": ("Flanders", "弗拉芒大区", "法蘭德斯大區", "フランデレン地域"),
-    "BE-WAL": ("Wallonia", "瓦隆大区", "瓦隆大區", "ワロン地域"),
-}
+# Names of the merged regions in the languages of the host, from Wikidata (CC0)
+# with a few corrections, kept next to this script.
+REGION_NAMES = json.load(open(os.path.join(os.path.dirname(__file__), "admin1-region-names.json"), encoding="utf-8"))
 
 
 def signed_area(ring):
@@ -269,7 +211,7 @@ def merge_levels(cc, features):
         props = {"iso_3166_2": code}
         names = REGION_NAMES.get(code)
         if names:
-            for lang, name in zip(("en", "zh", "zht", "ja"), names):
+            for lang, name in names.items():
                 props[f"name_{lang}"] = name
         else:
             props["name_en"] = members[0]["properties"].get("region") or code
