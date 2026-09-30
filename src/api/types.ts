@@ -271,23 +271,6 @@ export interface WorldMapData {
   isp?: string
 }
 
-export interface CityData {
-  name: string
-  value: number
-  percent: number
-}
-
-export interface ChinaMapData {
-  name: string
-  value: number
-  percent: number
-  cities?: CityData[]
-}
-
-export interface ChinaCityMapRequest extends AnalyticsRequest {
-  province: string
-}
-
 export interface GeoLiteStatus {
   exists: boolean
   path: string

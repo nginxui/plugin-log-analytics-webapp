@@ -3,7 +3,7 @@ import createConfig from '@antfu/eslint-config'
 export default createConfig(
   {
     stylistic: true,
-    ignores: ['**/*.md', '**/world.json', '**/i18n/*.json', 'dist', 'tsconfig.json'],
+    ignores: ['**/*.md', '**/world.json', '**/admin1/*.json', '**/i18n/*.json', 'dist', 'tsconfig.json'],
   },
   {
     name: '@nginx-ui/plugin-eslint-config',

@@ -28,15 +28,19 @@ const emit = defineEmits<{ back: [] }>()
 use([MapChart, TooltipComponent, VisualMapComponent, CanvasRenderer])
 
 interface OutlineFeature { properties: Record<string, unknown> }
-interface Outline { features: OutlineFeature[] }
+/** The top left and bottom right corners of the main territory. */
+type View = [[number, number], [number, number]]
+interface Outline { view?: View, features: OutlineFeature[] }
+interface Known { regions: Map<string, Record<string, unknown>>, view?: View }
 
 const style = useMapStyle()
 const hostLocale = useHostLocale()
 const { translateCountry } = useGeoTranslation()
 
 // The outlines of the regions of a country, registered once per country
-const registered = new Map<string, Map<string, Record<string, unknown>>>()
+const registered = new Map<string, Known>()
 const regions = ref<Map<string, Record<string, unknown>> | null>(null)
+const view = ref<View>()
 const data = ref<RegionMapData[]>([])
 const loading = ref(false)
 const failed = ref(false)
@@ -51,10 +55,14 @@ async function load() {
     if (!known) {
       const outline = await fetchAssetJson<Outline>(`assets/admin1/${props.country}.json`)
       registerMap(mapName.value, outline as unknown as Parameters<typeof registerMap>[1])
-      known = new Map(outline.features.map(f => [String(f.properties.code), f.properties]))
+      known = {
+        regions: new Map(outline.features.map(f => [String(f.properties.code), f.properties])),
+        view: outline.view,
+      }
       registered.set(props.country, known)
     }
-    regions.value = known
+    regions.value = known.regions
+    view.value = known.view
     const answer = await getRegionMapData({
       path: props.logPath,
       start_time: props.startTime,
@@ -119,6 +127,8 @@ const option = computed((): EChartsOption => {
       type: 'map',
       map: mapName.value,
       nameProperty: 'code',
+      // Opens on the main territory, overseas regions are reached by dragging
+      boundingCoords: view.value,
       roam: true,
       emphasis: {
         label: { show: true, color: style.value.fontColor, formatter: (p: { name: string }) => regionName(p.name) },

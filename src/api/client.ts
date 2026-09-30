@@ -4,9 +4,6 @@ import type {
   AdvancedSearchRequest,
   AdvancedSearchResponse,
   AnalyticsRequest,
-  ChinaCityMapRequest,
-  ChinaMapData,
-  CityData,
   CityPointData,
   DashboardAnalytics,
   DashboardRequest,
@@ -95,23 +92,7 @@ export async function getCityPoints(request: AnalyticsRequest): Promise<{ data: 
   return data
 }
 
-export async function getChinaMapData(request: AnalyticsRequest): Promise<{ data: ChinaMapData[] }> {
-  const { data } = await getHttp().post<{ data: ChinaMapData[] }>('/geo/china', request)
-  return data
-}
-
-export async function getChinaCityMapData(request: ChinaCityMapRequest): Promise<{ data: CityData[], top_data?: CityData[], custom_mmdb_mode?: boolean }> {
-  const { data } = await getHttp().post<{ data: CityData[], top_data?: CityData[], custom_mmdb_mode?: boolean }>('/geo/china/city', request)
-  return data
-}
-
 export async function getGeoLiteStatus(): Promise<GeoLiteStatus> {
   const { data } = await getHttp().get<GeoLiteStatus>('/geolite/status')
-  return data
-}
-
-/** Reads a China boundary file from the plugin, the caller falls back to a public mirror. */
-export async function getGeoBoundary(filename: string): Promise<unknown> {
-  const { data } = await getHttp().get<unknown>(`/geo/boundary/${encodeURIComponent(filename)}`)
   return data
 }

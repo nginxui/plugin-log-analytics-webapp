@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { AnalyticsRequest, ChinaMapData, DashboardAnalytics, DashboardRequest, WorldMapData } from '@/api/types'
+import type { AnalyticsRequest, DashboardAnalytics, DashboardRequest, WorldMapData } from '@/api/types'
 import { App, Col, Row } from 'antdv-next'
 import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
-import { getChinaMapData, getDashboardAnalytics, getPreflight, getWorldMapData } from '@/api/client'
+import { getDashboardAnalytics, getPreflight, getWorldMapData } from '@/api/client'
 import LoadingState from '@/components/LoadingState.vue'
 import { errorMessage } from '@/errors'
 import BrowserStatsTable from './components/BrowserStatsTable.vue'
@@ -33,7 +33,6 @@ const hasValidTimeRange = ref(false)
 
 // Geographic data
 const worldMapData = ref<WorldMapData[] | null>(null)
-const chinaMapData = ref<ChinaMapData[] | null>(null)
 const geoLoading = ref(false)
 
 // Overall loading state for refresh button
@@ -107,15 +106,11 @@ async function loadGeographicData() {
     const worldResponse = await getWorldMapData(request)
 
     worldMapData.value = worldResponse.data
-
-    const chinaResponse = await getChinaMapData(request)
-    chinaMapData.value = chinaResponse.data
   }
   catch (error) {
     console.error('Failed to load geographic data:', error)
     message.error(errorMessage(error))
     worldMapData.value = null
-    chinaMapData.value = null
   }
   finally {
     geoLoading.value = false
@@ -193,8 +188,6 @@ watch(dateRange, () => {
         <Col :span="24">
           <GeoMapChart
             :world-data="worldMapData"
-            :china-data="chinaMapData"
-            :enable-china-map="true"
             :loading="geoLoading"
             :log-path="logPath"
             :start-time="dateRange[0].unix()"

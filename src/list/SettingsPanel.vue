@@ -32,7 +32,6 @@ function readForm() {
     incremental_index_interval: numberOf(props.settings.incremental_index_interval),
     max_concurrent_index_tasks: numberOf(props.settings.max_concurrent_index_tasks),
     index_custom_mmdb: String(props.settings.index_custom_mmdb ?? ''),
-    geo_map_path: String(props.settings.geo_map_path ?? ''),
   }
 }
 
@@ -152,13 +151,6 @@ const systemRequirements = [
           :extra="$gettext('Optional. A MaxMind DB file with your own location labels. Leave empty to use the GeoLite2 database.')"
         >
           <AInput v-model:value="form.index_custom_mmdb" />
-        </AFormItem>
-
-        <AFormItem
-          :label="$gettext('Map files directory')"
-          :extra="$gettext('Directory with the map outline files of China. Leave empty to use the plugin\'s own folder. Files not found there are loaded online.')"
-        >
-          <AInput v-model:value="form.geo_map_path" />
         </AFormItem>
 
         <AButton type="primary" html-type="submit" :loading="saving" :disabled="!dirty">
