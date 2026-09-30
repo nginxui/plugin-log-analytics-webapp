@@ -1,0 +1,15 @@
+Map data of the log analytics dashboard
+
+Country and region outlines: Natural Earth, public domain.
+https://www.naturalearthdata.com/
+
+Region outlines of Bahamas, Bangladesh, Burundi, Guinea, Kenya, Latvia,
+Lebanon, Libya, Micronesia, Moldova, Nepal, Philippines, Qatar, Saint Lucia,
+Solomon Islands and Sudan: geoBoundaries, gbOpen, under public domain, CC0,
+CC BY 4.0 or CC BY 3.0 IGO, as listed per country in the source repository
+(scripts/admin1-geoboundaries-sources.json). Outlines simplified.
+Runfola, D. et al. (2020) geoBoundaries: A global database of political
+administrative boundaries. PLoS ONE 15(4): e0231866.
+https://www.geoboundaries.org/
+
+Region names: Wikidata, CC0. https://www.wikidata.org/

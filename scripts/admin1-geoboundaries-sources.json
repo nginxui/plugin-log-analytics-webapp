@@ -1,0 +1,98 @@
+{
+  "BD": {
+    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "source": "geoBoundaries, Wikimedia Commons",
+    "units": "8",
+    "year": "2015"
+  },
+  "BI": {
+    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "source": "geoBoundaries, Wikimedia",
+    "units": "18",
+    "year": "2014"
+  },
+  "BS": {
+    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "source": "Haiti GeoPortal",
+    "units": "32",
+    "year": "09-09-2017 to 24-08-2020"
+  },
+  "FM": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "OCHA ROP, Federated States of Micronesia Division of Statistics, 2010 Census of Population and Housing and Secretariat of the Pacific Community, Statistics for Development Division",
+    "units": "4",
+    "year": "2019"
+  },
+  "GN": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "World Food Programme, OCHA ROWCA",
+    "units": "8",
+    "year": "2017"
+  },
+  "KE": {
+    "license": "Public Domain",
+    "source": "RCMRD GeoPortal, Africa GeoPortal",
+    "units": "47",
+    "year": "2020"
+  },
+  "LB": {
+    "license": "Public Domain",
+    "source": "geoBoundaries, Wikimedia Commons",
+    "units": "9",
+    "year": "2017"
+  },
+  "LC": {
+    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "source": "Wikimedia Commons, Wikimedia Commons",
+    "units": "10",
+    "year": "2015"
+  },
+  "LV": {
+    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "source": "Geoportal of Latvia",
+    "units": "43",
+    "year": "2021"
+  },
+  "LY": {
+    "license": "Public Domain",
+    "source": "Natural Earth",
+    "units": "22",
+    "year": "2021"
+  },
+  "MD": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "UNHCR, OCHA FISS",
+    "units": "37",
+    "year": "2020"
+  },
+  "NP": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "Survey Department of Nepal, OCHA FISS",
+    "units": "7",
+    "year": "2020"
+  },
+  "PH": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "National Mapping and Resource Information Authority (NAMRIA), Philippines Statistics Authority (PSA), OCHA Philippines",
+    "units": "17",
+    "year": "2020"
+  },
+  "QA": {
+    "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "source": "geoBoundaries, Qatar Open Data Portal",
+    "units": "8",
+    "year": "2015"
+  },
+  "SB": {
+    "license": "Public Domain",
+    "source": "Natural Earth",
+    "units": "10",
+    "year": "2021"
+  },
+  "SD": {
+    "license": "Creative Commons Attribution 3.0 Intergovernmental Organisations (CC BY 3.0 IGO)",
+    "source": "Information Management Working Group (IMWG), OCHA ROSEA",
+    "units": "19",
+    "year": "2020"
+  }
+}

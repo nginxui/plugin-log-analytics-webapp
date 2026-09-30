@@ -52,12 +52,20 @@ one file per country, loaded when the country is opened. They add about
 
 - Region outlines: the admin 1 states and provinces of
   [Natural Earth](https://www.naturalearthdata.com/) at 1:10m, public domain.
-- Names of merged regions: [Wikidata](https://www.wikidata.org/), CC0, with a
-  few corrections, in `scripts/admin1-region-names.json`.
+- Region outlines of the countries listed in `scripts/admin1-geoboundaries.json`,
+  whose current regions Natural Earth lacks (Kenya's counties, for example):
+  [geoBoundaries](https://www.geoboundaries.org/) (Runfola et al. 2020, PLoS
+  ONE 15(4): e0231866), gbOpen release, first level. Only public domain, CC0
+  and CC BY data is used; `scripts/admin1-geoboundaries-sources.json` lists
+  the license, source and year of each country.
+- Names of the regions that do not come from Natural Earth:
+  [Wikidata](https://www.wikidata.org/), CC0, with a few corrections, in
+  `scripts/admin1-region-names.json`.
 
 ### How the region files are built
 
-`scripts/split-admin1.py` turns the Natural Earth file into the region files:
+`scripts/split-admin1.py` turns the Natural Earth file and the geoBoundaries
+files into the region files:
 
 - Every region is keyed by its ISO 3166-2 code, the code the GeoLite2 database
   gives as a visitor's first or second subdivision. Natural Earth still uses
@@ -104,11 +112,17 @@ The data rarely changes. Update it when:
 
 ### Updating
 
-1. Download `ne_10m_admin_1_states_provinces.geojson` from Natural Earth.
+1. Download `ne_10m_admin_1_states_provinces.geojson` from Natural Earth and
+   the geoBoundaries files, which also refreshes their sources list:
+
+   ```
+   python3 scripts/fetch-geoboundaries.py geoboundaries
+   ```
+
 2. Build the region files:
 
    ```
-   python3 scripts/split-admin1.py ne_10m_admin_1_states_provinces.geojson public/assets/admin1
+   python3 scripts/split-admin1.py ne_10m_admin_1_states_provinces.geojson public/assets/admin1 --geoboundaries geoboundaries
    ```
 
 3. Check them against a current GeoLite2 City database, for example the one a
@@ -126,7 +140,10 @@ The data rarely changes. Update it when:
    python3 scripts/check-admin1.py --suggest GeoLite2-City.mmdb public/assets/admin1
    ```
 
-   A merged region needs its names in `scripts/admin1-region-names.json`.
+   A merged region, or a region from geoBoundaries, needs its names in
+   `scripts/admin1-region-names.json`. A country whose regions only
+   geoBoundaries has goes into `scripts/admin1-geoboundaries.json`, if its
+   license is one of those above.
 5. When the remaining gaps cannot be closed, record them:
 
    ```

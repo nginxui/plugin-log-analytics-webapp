@@ -1,9 +1,11 @@
 """Split the Natural Earth admin-1 boundaries into one small GeoJSON file per
 country for the region maps of the log analytics plugins.
 
-    python3 split_admin1.py ne_10m_admin_1_states_provinces.geojson out/
+    python3 split-admin1.py ne_10m_admin_1_states_provinces.geojson out/ [--geoboundaries DIR]
 
-Each feature keeps its ISO 3166-2 code and the names in the languages of the
+The countries listed in admin1-geoboundaries.json take their outlines from the
+geoBoundaries files in DIR instead, see fetch-geoboundaries.py: Natural Earth
+lacks their current regions. Each feature keeps its ISO 3166-2 code and the names in the languages of the
 host. Geometry is simplified with Douglas-Peucker and rounded to 3 decimals.
 Hong Kong, Macau and Taiwan are regions of the China map, CN-HK, CN-MO and
 CN-TW, as the plugins count them under CN. Polygons across the antimeridian
@@ -127,8 +129,9 @@ def parent_code(cc, p):
     return None
 
 
-# Names of the merged regions in the languages of the host, from Wikidata (CC0)
-# with a few corrections, kept next to this script.
+# Names of the regions that do not come from Natural Earth, the merged ones and
+# those from geoBoundaries, in the languages of the host. From Wikidata (CC0)
+# with a few corrections.
 REGION_NAMES = json.load(open(os.path.join(os.path.dirname(__file__), "admin1-region-names.json"), encoding="utf-8"))
 
 # Current ISO 3166-2 codes of regions Natural Earth still names by an older or a
@@ -377,7 +380,29 @@ def layout(features, reach=3.0):
     return [[round(west, 2), round(north, 2)], [round(east, 2), round(south, 2)]], aspect, frames
 
 
-def main(src, dst):
+def geoboundaries(directory):
+    """Features of the countries whose outlines come from geoBoundaries."""
+    countries = json.load(open(os.path.join(os.path.dirname(__file__), "admin1-geoboundaries.json"), encoding="utf-8"))
+    result = {}
+    for cc in countries:
+        path = os.path.join(directory, f"{cc}.geojson")
+        if not os.path.exists(path):
+            raise SystemExit(f"{path} is missing, run fetch-geoboundaries.py first")
+        features = []
+        for f in json.load(open(path, encoding="utf-8"))["features"]:
+            code = (f["properties"].get("shapeISO") or "").strip()
+            # Parts without a code of the country, such as disputed areas
+            if not code.startswith(f"{cc}-") or f["geometry"] is None:
+                continue
+            props = {"iso_3166_2": code, "name_en": f["properties"].get("shapeName") or code}
+            for lang, name in REGION_NAMES.get(code, {}).items():
+                props[f"name_{lang}"] = name
+            features.append({"properties": props, "geometry": f["geometry"]})
+        result[cc] = features
+    return result
+
+
+def main(src, dst, gb_dir=None):
     data = json.load(open(src, encoding="utf-8"))
     by_country = {}
     for f in data["features"]:
@@ -398,6 +423,9 @@ def main(src, dst):
         if cc in by_country:
             by_country[cc] = merge_levels(cc, by_country[cc])
 
+    if gb_dir:
+        by_country.update(geoboundaries(gb_dir))
+
     os.makedirs(dst, exist_ok=True)
     total = 0
     index = {}
@@ -408,6 +436,8 @@ def main(src, dst):
         for f in features:
             # Small regions such as Macau keep enough points to stay visible
             g = geometry(f["geometry"], min(tolerance, max(0.0005, bbox_span([f]) / 20)))
+            # A region of small islands can vanish whole, keep its finer outline
+            g = g or geometry(f["geometry"], 0.0005)
             if not g:
                 continue
             p = f["properties"]
@@ -435,4 +465,10 @@ def main(src, dst):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    args = sys.argv[1:]
+    gb = None
+    if "--geoboundaries" in args:
+        at = args.index("--geoboundaries")
+        gb = args[at + 1]
+        del args[at:at + 2]
+    main(args[0], args[1], gb)
