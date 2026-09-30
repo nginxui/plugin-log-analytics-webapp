@@ -82,6 +82,7 @@ async function load() {
     // A newer request took over while this one waited
     if (request !== latest)
       return
+    reportMissingRegions(country, answer.data ?? [], known.regions)
     shownMap.value = `admin1-${country}`
     regions.value = known.regions
     view.value = known.view
@@ -100,6 +101,16 @@ async function load() {
     if (request === latest)
       loading.value = false
   }
+}
+
+// The outlines draw one level of subdivisions. A code of that level the
+// outline lacks means the outline data is out of date, see the README.
+function reportMissingRegions(country: string, items: RegionMapData[], outlined: Map<string, unknown>) {
+  const drawnAt = (level: number) => items.filter(item => item.level === level && outlined.has(item.code)).length
+  const level = drawnAt(2) > drawnAt(1) ? 2 : 1
+  const missing = items.filter(item => item.level === level && !outlined.has(item.code)).map(item => item.code)
+  if (missing.length > 0)
+    console.warn(`[log-analytics] the region outline of ${country} lacks ${missing.join(', ')}`)
 }
 
 watch(() => [props.country, props.logPath, props.startTime, props.endTime], load, { immediate: true })

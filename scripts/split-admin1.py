@@ -131,6 +131,10 @@ def parent_code(cc, p):
 # with a few corrections, kept next to this script.
 REGION_NAMES = json.load(open(os.path.join(os.path.dirname(__file__), "admin1-region-names.json"), encoding="utf-8"))
 
+# Current ISO 3166-2 codes of regions Natural Earth still names by an older or a
+# placeholder code, reviewed from the suggestions of check-admin1.py
+CODE_ALIASES = json.load(open(os.path.join(os.path.dirname(__file__), "admin1-code-aliases.json"), encoding="utf-8"))
+
 
 def signed_area(ring):
     return sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in zip(ring, ring[1:])) / 2
@@ -407,7 +411,8 @@ def main(src, dst):
             if not g:
                 continue
             p = f["properties"]
-            props = {"code": p["iso_3166_2"].strip(), "name": (p.get("name_en") or p.get("name") or "").strip()}
+            code = p["iso_3166_2"].strip()
+            props = {"code": CODE_ALIASES.get(code, code), "name": (p.get("name_en") or p.get("name") or "").strip()}
             for lang in LANGS:
                 value = (p.get(f"name_{lang}") or "").strip()
                 if value and value != props["name"]:

@@ -49,6 +49,8 @@ export interface AnalyticsRequest {
 /** Requests of one subdivision of a country, keyed by its ISO 3166-2 code. */
 export interface RegionMapData {
   code: string
+  /** 1 for the first subdivision of the country, 2 for the second. */
+  level: number
   value: number
   percent: number
 }

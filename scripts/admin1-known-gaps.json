@@ -1,0 +1,469 @@
+{
+  "AF": [
+    "AF-DAY"
+  ],
+  "AS": [
+    "AS-M",
+    "AS-R"
+  ],
+  "BD": [
+    "BD-H"
+  ],
+  "BI": [
+    "BI-RM"
+  ],
+  "BM": [
+    "BM-DS",
+    "BM-PG",
+    "BM-SH",
+    "BM-WA"
+  ],
+  "BQ": [
+    "BQ-BO",
+    "BQ-SA",
+    "BQ-SE"
+  ],
+  "BS": [
+    "BS-GC"
+  ],
+  "BW": [
+    "BW-CH"
+  ],
+  "CD": [
+    "CD-BU",
+    "CD-HK",
+    "CD-HL",
+    "CD-HU",
+    "CD-IT",
+    "CD-KC",
+    "CD-KG",
+    "CD-KL",
+    "CD-KS",
+    "CD-LO",
+    "CD-LU",
+    "CD-MN",
+    "CD-MO",
+    "CD-NU",
+    "CD-SA",
+    "CD-SU",
+    "CD-TA",
+    "CD-TO",
+    "CD-TU"
+  ],
+  "CI": [
+    "CI-AB",
+    "CI-GD",
+    "CI-MG",
+    "CI-SM",
+    "CI-WR",
+    "CI-YM"
+  ],
+  "CO": [
+    "CO-DC",
+    "CO-SAP"
+  ],
+  "CY": [
+    "CY-06"
+  ],
+  "DZ": [
+    "DZ-49",
+    "DZ-51",
+    "DZ-52",
+    "DZ-53",
+    "DZ-54"
+  ],
+  "EE": [
+    "EE-45",
+    "EE-50",
+    "EE-52",
+    "EE-60",
+    "EE-64",
+    "EE-68",
+    "EE-71",
+    "EE-81",
+    "EE-87"
+  ],
+  "ET": [
+    "ET-SI"
+  ],
+  "FM": [
+    "FM-TRK",
+    "FM-YAP"
+  ],
+  "GH": [
+    "GH-AF",
+    "GH-BE",
+    "GH-BO",
+    "GH-NE",
+    "GH-OT",
+    "GH-SV",
+    "GH-WN"
+  ],
+  "GL": [
+    "GL-AV",
+    "GL-QT"
+  ],
+  "GN": [
+    "GN-KA"
+  ],
+  "GQ": [
+    "GQ-DJ"
+  ],
+  "HR": [
+    "HR-11"
+  ],
+  "ID": [
+    "ID-KU",
+    "ID-PD",
+    "ID-PS",
+    "ID-PT"
+  ],
+  "IN": [
+    "IN-LD"
+  ],
+  "IR": [
+    "IR-00",
+    "IR-09"
+  ],
+  "KE": [
+    "KE-01",
+    "KE-03",
+    "KE-04",
+    "KE-05",
+    "KE-06",
+    "KE-07",
+    "KE-08",
+    "KE-09",
+    "KE-10",
+    "KE-11",
+    "KE-12",
+    "KE-13",
+    "KE-14",
+    "KE-15",
+    "KE-16",
+    "KE-17",
+    "KE-18",
+    "KE-19",
+    "KE-20",
+    "KE-21",
+    "KE-22",
+    "KE-25",
+    "KE-26",
+    "KE-27",
+    "KE-28",
+    "KE-29",
+    "KE-31",
+    "KE-32",
+    "KE-34",
+    "KE-35",
+    "KE-36",
+    "KE-37",
+    "KE-38",
+    "KE-40",
+    "KE-41",
+    "KE-42",
+    "KE-43",
+    "KE-44",
+    "KE-45",
+    "KE-46",
+    "KE-47"
+  ],
+  "KH": [
+    "KH-25"
+  ],
+  "KI": [
+    "KI-G",
+    "KI-L",
+    "KI-P"
+  ],
+  "KP": [
+    "KP-15"
+  ],
+  "KZ": [
+    "KZ-10",
+    "KZ-19",
+    "KZ-33",
+    "KZ-62",
+    "KZ-75",
+    "KZ-79"
+  ],
+  "LA": [
+    "LA-VT",
+    "LA-XS"
+  ],
+  "LB": [
+    "LB-AK",
+    "LB-BH"
+  ],
+  "LC": [
+    "LC-12"
+  ],
+  "LU": [
+    "LU-CA",
+    "LU-CL",
+    "LU-DI",
+    "LU-EC",
+    "LU-ES",
+    "LU-GR",
+    "LU-LU",
+    "LU-ME",
+    "LU-RD",
+    "LU-RM",
+    "LU-VD",
+    "LU-WI"
+  ],
+  "LV": [
+    "LV-041",
+    "LV-077",
+    "LV-106",
+    "LV-111",
+    "LV-112"
+  ],
+  "LY": [
+    "LY-DR",
+    "LY-JG",
+    "LY-NL",
+    "LY-WA"
+  ],
+  "MD": [
+    "MD-DU"
+  ],
+  "ME": [
+    "ME-22",
+    "ME-23"
+  ],
+  "MH": [
+    "MH-ALK",
+    "MH-ALL",
+    "MH-ARN",
+    "MH-AUR",
+    "MH-EBO",
+    "MH-JAL",
+    "MH-KIL",
+    "MH-KWA",
+    "MH-LAE",
+    "MH-LIK",
+    "MH-MAJ",
+    "MH-MIL",
+    "MH-NMK",
+    "MH-UJA",
+    "MH-UTI",
+    "MH-WTJ"
+  ],
+  "MK": [
+    "MK-109",
+    "MK-203",
+    "MK-206",
+    "MK-208",
+    "MK-209",
+    "MK-211",
+    "MK-301",
+    "MK-307",
+    "MK-313",
+    "MK-407",
+    "MK-409",
+    "MK-504",
+    "MK-505",
+    "MK-603",
+    "MK-605",
+    "MK-706",
+    "MK-802",
+    "MK-805",
+    "MK-808",
+    "MK-810",
+    "MK-812",
+    "MK-813",
+    "MK-814",
+    "MK-816"
+  ],
+  "ML": [
+    "ML-10"
+  ],
+  "MM": [
+    "MM-18"
+  ],
+  "MP": [
+    "MP-N"
+  ],
+  "MR": [
+    "MR-13",
+    "MR-14",
+    "MR-15"
+  ],
+  "MU": [
+    "MU-CC"
+  ],
+  "MV": [
+    "MV-00",
+    "MV-02",
+    "MV-03",
+    "MV-04",
+    "MV-05",
+    "MV-07",
+    "MV-08",
+    "MV-14",
+    "MV-20",
+    "MV-23",
+    "MV-24",
+    "MV-26",
+    "MV-27",
+    "MV-28",
+    "MV-MLE"
+  ],
+  "MZ": [
+    "MZ-MPM"
+  ],
+  "NA": [
+    "NA-KE",
+    "NA-KW"
+  ],
+  "NO": [
+    "NO-34",
+    "NO-42",
+    "NO-46",
+    "NO-50"
+  ],
+  "NP": [
+    "NP-P1",
+    "NP-P2",
+    "NP-P3",
+    "NP-P4",
+    "NP-P5",
+    "NP-P6",
+    "NP-P7"
+  ],
+  "OM": [
+    "OM-SJ"
+  ],
+  "PA": [
+    "PA-10"
+  ],
+  "PE": [
+    "PE-LMA"
+  ],
+  "PF": [
+    "PF-M",
+    "PF-T",
+    "PF-V"
+  ],
+  "PG": [
+    "PG-HLA"
+  ],
+  "PH": [
+    "PH-DVO"
+  ],
+  "PM": [
+    "PM-P"
+  ],
+  "PS": [
+    "PS-BTH",
+    "PS-DEB",
+    "PS-HBN",
+    "PS-JEM",
+    "PS-JEN",
+    "PS-JRH",
+    "PS-KYS",
+    "PS-NBS",
+    "PS-NGZ",
+    "PS-QQA",
+    "PS-RBH",
+    "PS-RFH",
+    "PS-SLT",
+    "PS-TBS",
+    "PS-TKM"
+  ],
+  "QA": [
+    "QA-SH"
+  ],
+  "RS": [
+    "RS-VO"
+  ],
+  "SB": [
+    "SB-WE"
+  ],
+  "SC": [
+    "SC-15"
+  ],
+  "SD": [
+    "SD-DC",
+    "SD-GK"
+  ],
+  "SI": [
+    "SI-010",
+    "SI-088",
+    "SI-196",
+    "SI-197",
+    "SI-202",
+    "SI-203",
+    "SI-204",
+    "SI-205",
+    "SI-207",
+    "SI-208",
+    "SI-209",
+    "SI-210",
+    "SI-211",
+    "SI-212",
+    "SI-213"
+  ],
+  "SJ": [
+    "SJ-21",
+    "SJ-22"
+  ],
+  "SL": [
+    "SL-NW"
+  ],
+  "SO": [
+    "SO-AW",
+    "SO-SA",
+    "SO-SO",
+    "SO-TO",
+    "SO-WO"
+  ],
+  "ST": [
+    "ST-01",
+    "ST-06"
+  ],
+  "TD": [
+    "TD-EE",
+    "TD-EO"
+  ],
+  "TJ": [
+    "TJ-RA"
+  ],
+  "TK": [
+    "TK-A",
+    "TK-F",
+    "TK-N"
+  ],
+  "TM": [
+    "TM-S"
+  ],
+  "TN": [
+    "TN-12"
+  ],
+  "TT": [
+    "TT-MRC"
+  ],
+  "TV": [
+    "TV-FUN",
+    "TV-NIT",
+    "TV-NKF",
+    "TV-NKL",
+    "TV-NMA",
+    "TV-NMG",
+    "TV-NUI",
+    "TV-VAI"
+  ],
+  "UA": [
+    "UA-40",
+    "UA-43"
+  ],
+  "VI": [
+    "VI-C",
+    "VI-J",
+    "VI-T"
+  ],
+  "YE": [
+    "YE-SU"
+  ]
+}
