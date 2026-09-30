@@ -4,9 +4,9 @@
 // dashboard views are separate chunks fetched when a page first needs them.
 import type { NginxUIPlugin, PluginRegistry } from '@nginxui/plugin-sdk'
 import { registerPlugin } from '@nginxui/plugin-sdk'
-import { PLUGIN_ID } from '../build.constants'
 import { setAssetBase } from './assets'
 import { translations } from './i18n'
+import { PLUGIN_ID } from './plugin-id'
 import { resetRuntime, setRegistry } from './runtime'
 import { registerSlots } from './slots'
 import { disposeStatusStore } from './store/status'

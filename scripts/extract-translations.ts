@@ -5,7 +5,7 @@
 //   bun scripts/extract-translations.ts [--po-dir <dir>]
 //
 // The catalog directory defaults to $NGINX_UI_LANGUAGE_DIR, then to
-// ../../nginx-ui/app/src/language next to this repository.
+// ../nginx-ui/app/src/language next to this repository.
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -38,7 +38,7 @@ function sourceFiles(dir: string): string[] {
   return files
 }
 
-const poDir = resolve(argValue('--po-dir') ?? process.env.NGINX_UI_LANGUAGE_DIR ?? join(root, '../../nginx-ui/app/src/language'))
+const poDir = resolve(argValue('--po-dir') ?? process.env.NGINX_UI_LANGUAGE_DIR ?? join(root, '../nginx-ui/app/src/language'))
 if (!existsSync(poDir)) {
   console.error(`catalog directory not found: ${poDir}`)
   process.exit(2)

@@ -1,7 +1,7 @@
 // Static files of the plugin package (map outlines, country names). They are
 // not part of any script: the host serves them from the package directory next
 // to the bundle, and they are fetched when a view first needs them.
-import { PLUGIN_ID } from '../build.constants'
+import { PLUGIN_ID } from './plugin-id'
 import { getRuntime } from './runtime'
 
 interface AssetState {

@@ -1,9 +1,9 @@
 {
-  "name": "plugin-log-analytics-tantivy-webapp",
+  "name": "plugin-log-analytics-webapp",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "Webapp bundle for the NGINX UI log analytics plugin: log list columns, structured search and the traffic dashboard",
+  "description": "Webapp of the NGINX UI log analytics plugins: log list columns, structured search and the traffic dashboard, built for each plugin",
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build && vite build -c vite.search.config.ts && vite build -c vite.dashboard.config.ts",
@@ -11,10 +11,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "bun test tests",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "package": "bash scripts/package.sh"
   },
   "dependencies": {
-    "@nginxui/plugin-sdk": "file:../../plugin-sdk-web",
+    "@nginxui/plugin-sdk": "file:../plugin-sdk-web",
     "apexcharts": "^7.5.1",
     "dayjs": "^1.11.23",
     "echarts": "^6.1.0",

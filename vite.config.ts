@@ -8,7 +8,7 @@ import { nginxUiPlugin } from '@nginxui/plugin-sdk/vite'
 import vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
-import { PLUGIN_ID } from './build.constants'
+import { OUT_DIR, PLUGIN_ID } from './build.constants'
 
 // Country name files of i18n-iso-countries, one per language the host offers.
 // They ship as static files so a view only fetches the language it shows.
@@ -35,7 +35,7 @@ export default defineConfig({
   plugins: [
     vue(),
     UnoCSS(),
-    nginxUiPlugin({ id: PLUGIN_ID, chunks: ['search', 'dashboard'] }),
+    nginxUiPlugin({ id: PLUGIN_ID, chunks: ['search', 'dashboard'], outDir: OUT_DIR }),
     countryNames(),
   ],
   resolve: {
@@ -45,5 +45,6 @@ export default defineConfig({
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
+    '__PLUGIN_ID__': JSON.stringify(PLUGIN_ID),
   },
 })

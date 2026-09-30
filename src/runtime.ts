@@ -2,7 +2,7 @@
 // carries its own copy of the modules it imports, so anything that has to be a
 // singleton lives on a global under a registered symbol.
 import type { PluginRegistry } from '@nginxui/plugin-sdk'
-import { PLUGIN_ID } from '../build.constants'
+import { PLUGIN_ID } from './plugin-id'
 
 export interface Runtime {
   registry?: PluginRegistry

@@ -5,7 +5,7 @@
     "": {
       "name": "plugin-log-analytics-webapp",
       "dependencies": {
-        "@nginxui/plugin-sdk": "file:../../plugin-sdk-web",
+        "@nginxui/plugin-sdk": "file:../plugin-sdk-web",
         "apexcharts": "^7.5.1",
         "dayjs": "^1.11.23",
         "echarts": "^6.1.0",
@@ -183,7 +183,7 @@
 
     "@napi-rs/lzma-linux-x64-gnu": ["@napi-rs/lzma-linux-x64-gnu@1.5.1", "", { "os": "linux", "cpu": "x64" }, "sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ=="],
 
-    "@nginxui/plugin-sdk": ["@nginxui/plugin-sdk@file:../../plugin-sdk-web", { "devDependencies": { "@types/node": "^26.6.2", "typescript": "^5.9.3", "vite": "^7.0.0" }, "peerDependencies": { "vite": ">=5" }, "optionalPeers": ["vite"] }],
+    "@nginxui/plugin-sdk": ["@nginxui/plugin-sdk@file:../plugin-sdk-web", { "devDependencies": { "@types/node": "^26.6.2", "typescript": "^5.9.3", "vite": "^7.0.0" }, "peerDependencies": { "vite": ">=5" }, "optionalPeers": ["vite"] }],
 
     "@ota-meshi/ast-token-store": ["@ota-meshi/ast-token-store@0.3.0", "", {}, "sha512-XRO0zi2NIUKq2lUk3T1ecFSld1fMWRKE6naRFGkgkdeosx7IslyUKNv5Dcb5PJTja9tHJoFu0v/7yEpAkrkrTg=="],
 
