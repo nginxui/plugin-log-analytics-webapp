@@ -300,7 +300,7 @@ suite('built bundles', () => {
   test('the settings panel shows the fields with the saved values and saves through the host', async () => {
     let saved: Record<string, unknown> | undefined
     const { root, app } = mount(settingsPanel!, {
-      settings: { incremental_index_interval: 30, max_concurrent_index_tasks: 0, index_custom_mmdb: '', geo_map_path: '/maps', other: 'kept' },
+      settings: { incremental_index_interval: 30, max_concurrent_index_tasks: 0, index_custom_mmdb: '/data/custom.mmdb', other: 'kept' },
       save: async (next: Record<string, unknown>) => {
         saved = next
       },
@@ -311,7 +311,8 @@ suite('built bundles', () => {
     expect(root.textContent).toContain('GeoLite2 数据库')
     const inputs = root.querySelectorAll('input')
     expect((inputs[0] as HTMLInputElement).value).toBe('30')
-    expect((inputs[3] as HTMLInputElement).value).toBe('/maps')
+    expect((inputs[2] as HTMLInputElement).value).toBe('/data/custom.mmdb')
+    expect(inputs).toHaveLength(3)
     expect(saved).toBeUndefined()
     app.unmount()
   })
