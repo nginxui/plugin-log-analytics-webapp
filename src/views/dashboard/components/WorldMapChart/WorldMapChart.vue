@@ -14,6 +14,7 @@ import { fetchAssetJson } from '@/assets'
 import { $gettext } from '@/gettext'
 import { useHostTheme } from '@/theme'
 import { useGeoTranslation } from '../../geo'
+import MapLegend from '../MapLegend.vue'
 
 const props = defineProps<{
   data: WorldMapData[] | null
@@ -133,12 +134,8 @@ const mapOption = computed((): EChartsOption => {
     visualMap: {
       min: 0,
       max: maxValue,
-      left: 'left',
-      top: 'bottom',
-      text: [$gettext('High'), $gettext('Low')],
-      textStyle: {
-        color: fontColor.value,
-      },
+      // The scale is shown by MapLegend under the chart
+      show: false,
       inRange: {
         color: visualMapColors.value,
       },
@@ -269,11 +266,12 @@ const columns = computed(() => {
         <div class="lg:la-col-span-3">
           <VChart
             ref="chartRef"
+            class="map-chart"
             :option="mapOption"
-            style="height: 400px; width: 100%"
             autoresize
             @click="handleChartClick"
           />
+          <MapLegend :colors="visualMapColors" />
         </div>
 
         <!-- Table on right (or bottom on small screens) -->
@@ -295,6 +293,14 @@ const columns = computed(() => {
 </template>
 
 <style scoped>
+.map-chart {
+  width: 100%;
+  /* The height follows the width, so narrow screens keep little blank space */
+  aspect-ratio: 3 / 2;
+  min-height: 240px;
+  max-height: 420px;
+}
+
 .no-data {
   display: flex;
   justify-content: center;

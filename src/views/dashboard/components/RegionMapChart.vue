@@ -14,6 +14,7 @@ import { fetchAssetJson } from '@/assets'
 import { $gettext } from '@/gettext'
 import { useHostLocale } from '@/theme'
 import { regionNameOf, useGeoTranslation } from '../geo'
+import MapLegend from './MapLegend.vue'
 import { tooltipHtml, useMapStyle } from './mapStyle'
 
 const props = defineProps<{
@@ -30,8 +31,8 @@ use([MapChart, TooltipComponent, VisualMapComponent, CanvasRenderer])
 interface OutlineFeature { properties: Record<string, unknown> }
 /** The top left and bottom right corners of the main territory. */
 type View = [[number, number], [number, number]]
-interface Outline { view?: View, features: OutlineFeature[] }
-interface Known { regions: Map<string, Record<string, unknown>>, view?: View }
+interface Outline { view?: View, aspect?: number, features: OutlineFeature[] }
+interface Known { regions: Map<string, Record<string, unknown>>, frames: string[], view?: View, aspect?: number }
 
 const style = useMapStyle()
 const hostLocale = useHostLocale()
@@ -41,43 +42,63 @@ const { translateCountry } = useGeoTranslation()
 const registered = new Map<string, Known>()
 const regions = ref<Map<string, Record<string, unknown>> | null>(null)
 const view = ref<View>()
+const aspect = ref<number>()
+const frames = ref<string[]>([])
 const data = ref<RegionMapData[]>([])
 const loading = ref(false)
 const failed = ref(false)
 
-const mapName = computed(() => `admin1-${props.country}`)
+// The map the chart draws. It changes only once the outline of the new
+// country is registered, since ECharts fails on a map it does not know.
+const shownMap = ref<string>()
+let latest = 0
 
 async function load() {
+  const request = ++latest
+  const country = props.country
   loading.value = true
   failed.value = false
   try {
-    let known = registered.get(props.country)
+    let known = registered.get(country)
     if (!known) {
-      const outline = await fetchAssetJson<Outline>(`assets/admin1/${props.country}.json`)
-      registerMap(mapName.value, outline as unknown as Parameters<typeof registerMap>[1])
+      const outline = await fetchAssetJson<Outline>(`assets/admin1/${country}.json`)
+      registerMap(`admin1-${country}`, outline as unknown as Parameters<typeof registerMap>[1])
+      // Frames around the insets of outlying regions are drawn but not counted
+      const isFrame = (f: OutlineFeature) => Boolean(f.properties.frame)
       known = {
-        regions: new Map(outline.features.map(f => [String(f.properties.code), f.properties])),
+        regions: new Map(outline.features.filter(f => !isFrame(f)).map(f => [String(f.properties.code), f.properties])),
+        frames: outline.features.filter(isFrame).map(f => String(f.properties.code)),
         view: outline.view,
+        aspect: outline.aspect,
       }
-      registered.set(props.country, known)
+      registered.set(country, known)
     }
-    regions.value = known.regions
-    view.value = known.view
     const answer = await getRegionMapData({
       path: props.logPath,
       start_time: props.startTime,
       end_time: props.endTime,
-      country: props.country,
+      country,
     })
+    // A newer request took over while this one waited
+    if (request !== latest)
+      return
+    shownMap.value = `admin1-${country}`
+    regions.value = known.regions
+    view.value = known.view
+    aspect.value = known.aspect
+    frames.value = known.frames
     data.value = answer.data ?? []
   }
   catch (error) {
-    console.error(`[log-analytics] could not load the regions of ${props.country}`, error)
+    if (request !== latest)
+      return
+    console.error(`[log-analytics] could not load the regions of ${country}`, error)
     failed.value = true
     data.value = []
   }
   finally {
-    loading.value = false
+    if (request === latest)
+      loading.value = false
   }
 }
 
@@ -93,7 +114,7 @@ function regionName(code: string): string {
 const drawn = computed(() => data.value.filter(item => regions.value?.has(item.code)))
 
 const option = computed((): EChartsOption => {
-  if (!regions.value)
+  if (!regions.value || !shownMap.value)
     return {}
   const max = Math.max(1, ...drawn.value.map(item => item.value))
   return {
@@ -115,20 +136,20 @@ const option = computed((): EChartsOption => {
     visualMap: {
       min: 0,
       max,
-      left: 'left',
-      top: 'bottom',
-      text: [$gettext('High'), $gettext('Low')],
-      textStyle: { color: style.value.fontColor },
+      // The scale is shown by MapLegend under the chart
+      show: false,
       inRange: { color: style.value.scale },
       calculable: false,
     },
     series: [{
       name: $gettext('Visits'),
       type: 'map',
-      map: mapName.value,
+      map: shownMap.value,
       nameProperty: 'code',
-      // Opens on the main territory, overseas regions are reached by dragging
+      // Opens on the main territory with the insets of outlying regions
       boundingCoords: view.value,
+      // Longitude shrinks with the latitude of the country, 0.75 is the ECharts default
+      aspectScale: aspect.value ?? 0.75,
       roam: true,
       // The default layout keeps the aspect but fills only 80% of the chart
       zoom: 1.2,
@@ -137,7 +158,15 @@ const option = computed((): EChartsOption => {
         itemStyle: { areaColor: style.value.emphasisColor },
       },
       itemStyle: { areaColor: style.value.areaColor, borderColor: style.value.borderColor, borderWidth: 0.5 },
-      data: drawn.value.map(item => ({ ...item, name: item.code })),
+      data: [
+        ...drawn.value.map(item => ({ ...item, name: item.code })),
+        ...frames.value.map(code => ({
+          name: code,
+          itemStyle: { areaColor: 'transparent', borderColor: style.value.frameColor, borderWidth: 1 },
+          emphasis: { disabled: true },
+          tooltip: { show: false },
+        })),
+      ],
     }],
   }
 })
@@ -173,7 +202,10 @@ const columns = computed(() => [
         <AEmpty :description="failed ? $gettext('The regions of this country could not be loaded') : $gettext('No geographic data available')" />
       </div>
       <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-5 la-gap-6">
-        <VChart class="lg:la-col-span-3" :option="option" style="height: 400px; width: 100%" autoresize />
+        <div class="lg:la-col-span-3">
+          <VChart class="map-chart" :option="option" autoresize />
+          <MapLegend :colors="style.scale" />
+        </div>
         <div class="lg:la-col-span-2 la-flex la-flex-col la-justify-center">
           <div class="la-mb-3 la-text-sm la-font-bold">
             {{ $gettext('Top 10 Regions') }}
@@ -184,3 +216,13 @@ const columns = computed(() => [
     </ASpin>
   </div>
 </template>
+
+<style scoped>
+.map-chart {
+  width: 100%;
+  /* The height follows the width, so narrow screens keep little blank space */
+  aspect-ratio: 3 / 2;
+  min-height: 240px;
+  max-height: 420px;
+}
+</style>

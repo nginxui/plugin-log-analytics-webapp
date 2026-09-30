@@ -141,7 +141,7 @@ const columns = computed(() => [
       <AEmpty :description="$gettext('No city data available')" />
     </div>
     <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-5 la-gap-6">
-      <VChart class="lg:la-col-span-3" :option="option" style="height: 400px; width: 100%" autoresize />
+      <VChart class="map-chart lg:la-col-span-3" :option="option" autoresize />
       <div class="lg:la-col-span-2 la-flex la-flex-col la-justify-center">
         <div class="la-mb-3 la-text-sm la-font-bold">
           {{ $gettext('Top 10 Cities') }}
@@ -151,3 +151,13 @@ const columns = computed(() => [
     </div>
   </ASpin>
 </template>
+
+<style scoped>
+.map-chart {
+  width: 100%;
+  /* The height follows the width, so narrow screens keep little blank space */
+  aspect-ratio: 3 / 2;
+  min-height: 240px;
+  max-height: 420px;
+}
+</style>

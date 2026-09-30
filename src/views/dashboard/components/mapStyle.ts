@@ -10,6 +10,7 @@ export interface MapStyle {
   areaColor: string
   borderColor: string
   emphasisColor: string
+  frameColor: string
   scale: string[]
   pointColor: string
   tooltip: { backgroundColor: string, borderColor: string, textStyle: { color: string } }
@@ -25,6 +26,7 @@ export function useMapStyle(): ComputedRef<MapStyle> {
       areaColor: dark ? '#2a2a2a' : '#f5f5f5',
       borderColor: dark ? '#555' : '#ddd',
       emphasisColor: dark ? '#3a5a7c' : '#ffd666',
+      frameColor: dark ? '#666' : '#bbb',
       scale: dark ? ['#003a70', '#1890ff', '#69c0ff'] : ['#e6f3ff', '#1890ff', '#0050b3'],
       pointColor: dark ? '#ffa940' : '#fa541c',
       tooltip: {
