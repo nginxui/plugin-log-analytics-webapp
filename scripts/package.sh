@@ -22,6 +22,16 @@ for id in ${IDS}; do
   echo "building ${id}"
   PLUGIN_ID="${id}" OUT_DIR="build/${id}" bun run build >/dev/null
   test -f "build/${id}/main.js" && test -f "build/${id}/chunks/search.js" && test -f "build/${id}/chunks/dashboard.js"
+  # The fragment names the files where a plugin package holds them
+  bun -e "
+    const file = 'build/${id}/manifest.webapp.json'
+    const m = JSON.parse(await Bun.file(file).text())
+    const at = path => 'webapp/dist/' + path.split('/build/${id}/')[1]
+    m.bundle_path = at(m.bundle_path)
+    m.style_path = at(m.style_path)
+    for (const name of Object.keys(m.chunks ?? {})) m.chunks[name] = at(m.chunks[name])
+    await Bun.write(file, JSON.stringify(m, null, 2) + '\\n')
+  "
 done
 
 # shellcheck disable=SC2086
