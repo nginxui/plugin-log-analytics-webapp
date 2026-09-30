@@ -21,14 +21,15 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  drillChina: []
+  /** A country was clicked, by its ISO code. */
+  drillCountry: [code: string]
 }>()
 
 // Register ECharts components
 use([MapChart, TitleComponent, TooltipComponent, LegendComponent, VisualMapComponent, CanvasRenderer])
 
 const theme = useHostTheme()
-const { formatGeoDisplay, translateCountry, isChineseLocale, ready: namesReady } = useGeoTranslation()
+const { formatGeoDisplay, translateCountry, ready: namesReady } = useGeoTranslation()
 
 const chartRef = useTemplateRef<InstanceType<typeof VChart>>('chartRef')
 
@@ -197,18 +198,17 @@ function isWorldMapClickData(data: unknown): data is WorldMapClickData {
   return typeof data === 'object' && data !== null && 'code' in data
 }
 
-// Clicking the China region drills down into the province-level map.
-// Non-Chinese locales never expose the China map view, so map clicks are a no-op there.
+// Clicking a country asks for its regions. The parent decides which map, if
+// any, shows them.
 function handleChartClick(params: unknown) {
-  if (!isChineseLocale.value || typeof params !== 'object' || params === null)
+  if (typeof params !== 'object' || params === null)
     return
 
   const { data, name } = params as { data?: unknown, name?: string }
   const countryCode = isWorldMapClickData(data) ? data.code : countries.getAlpha2Code(name || '', 'en')
 
-  if (countryCode === 'CN') {
-    emit('drillChina')
-  }
+  if (countryCode)
+    emit('drillCountry', countryCode)
 }
 
 // Table data for top 10 countries

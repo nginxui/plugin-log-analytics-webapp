@@ -40,6 +40,19 @@ export function languageCodeOf(locale: string): string {
   return LANGUAGE_CODES[locale] ?? 'en'
 }
 
+// Host locale to the name property of the region outlines: name_<code>.
+// Traditional Chinese has names of its own there.
+const REGION_NAME_CODES: Record<string, string> = { ...LANGUAGE_CODES, zh_TW: 'zht' }
+
+/** The name of a region outline feature in the language of the host. */
+export function regionNameOf(properties: Record<string, unknown>, locale: string): string {
+  const code = REGION_NAME_CODES[locale] ?? 'en'
+  const localized = properties[`name_${code}`]
+  if (typeof localized === 'string' && localized)
+    return localized
+  return typeof properties.name === 'string' ? properties.name : ''
+}
+
 export function isChineseLocaleCode(locale: string): boolean {
   return locale === 'zh_CN' || locale === 'zh_TW'
 }

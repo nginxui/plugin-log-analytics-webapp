@@ -39,3 +39,18 @@ bun run i18n         # the translation catalogs, from the NGINX UI catalogs
 `@nginxui/plugin-sdk` resolves to a checkout of `plugin-sdk-web` next to this
 repository. `bun run i18n` reads the catalogs of a checkout of `nginx-ui` next
 to it, or of `NGINX_UI_LANGUAGE_DIR`.
+
+## Map data
+
+`public/assets/world.json` holds the country outlines. The region outlines in
+`public/assets/admin1/` come from the admin 1 states and provinces of
+[Natural Earth](https://www.naturalearthdata.com/) (public domain), one file per
+country with the ISO 3166-2 code and the names in the languages of NGINX UI,
+simplified by `scripts/split-admin1.py`:
+
+```
+python3 scripts/split-admin1.py ne_10m_admin_1_states_provinces.geojson public/assets/admin1
+```
+
+China, Hong Kong, Macau and Taiwan are left out: the China map covers them with
+its own province and city outlines.

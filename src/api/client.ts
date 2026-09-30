@@ -7,11 +7,13 @@ import type {
   ChinaCityMapRequest,
   ChinaMapData,
   CityData,
+  CityPointData,
   DashboardAnalytics,
   DashboardRequest,
   GeoLiteStatus,
   LogStatusResponse,
   PreflightResponse,
+  RegionMapData,
   WorldMapData,
 } from './types'
 import { getHttp } from '../host'
@@ -80,6 +82,16 @@ export async function getDashboardAnalytics(request: DashboardRequest): Promise<
 
 export async function getWorldMapData(request: AnalyticsRequest): Promise<{ data: WorldMapData[] }> {
   const { data } = await getHttp().post<{ data: WorldMapData[] }>('/geo/world', request)
+  return data
+}
+
+export async function getRegionMapData(request: AnalyticsRequest & { country: string }): Promise<{ data: RegionMapData[] }> {
+  const { data } = await getHttp().post<{ data: RegionMapData[] }>('/geo/regions', request)
+  return data
+}
+
+export async function getCityPoints(request: AnalyticsRequest): Promise<{ data: CityPointData[] }> {
+  const { data } = await getHttp().post<{ data: CityPointData[] }>('/geo/points', request)
   return data
 }
 

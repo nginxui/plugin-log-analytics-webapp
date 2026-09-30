@@ -208,5 +208,45 @@
     "zh_CN": "条目的级别：debug、info、notice、warn、error、crit、alert 或 emerg",
     "zh_TW": "條目的等級：debug、info、notice、warn、error、crit、alert 或 emerg",
     "ja_JP": "エントリのレベル: debug、info、notice、warn、error、crit、alert、emerg のいずれか"
+  },
+  "Access Hotspots": {
+    "zh_CN": "访问热点",
+    "zh_TW": "存取熱點",
+    "ja_JP": "アクセスのホットスポット"
+  },
+  "Access Map of %{country}": {
+    "zh_CN": "%{country}访问地图",
+    "zh_TW": "%{country}存取地圖",
+    "ja_JP": "%{country} のアクセスマップ"
+  },
+  "Hotspots": {
+    "zh_CN": "热点图",
+    "zh_TW": "熱點圖",
+    "ja_JP": "ホットスポット"
+  },
+  "No city data available": {
+    "zh_CN": "没有可用的城市数据",
+    "zh_TW": "沒有可用的城市資料",
+    "ja_JP": "利用できる都市データはありません"
+  },
+  "Region": {
+    "zh_CN": "地区",
+    "zh_TW": "地區",
+    "ja_JP": "地域"
+  },
+  "The regions of this country could not be loaded": {
+    "zh_CN": "无法加载该国家的地区",
+    "zh_TW": "無法載入該國家的地區",
+    "ja_JP": "この国の地域を読み込めませんでした"
+  },
+  "Top 10 Regions": {
+    "zh_CN": "前 10 个地区",
+    "zh_TW": "前 10 個地區",
+    "ja_JP": "上位 10 地域"
+  },
+  "World": {
+    "zh_CN": "世界",
+    "zh_TW": "世界",
+    "ja_JP": "世界"
   }
 }

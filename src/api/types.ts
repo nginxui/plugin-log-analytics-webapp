@@ -42,6 +42,25 @@ export interface AnalyticsRequest {
   start_time?: number
   end_time?: number
   limit?: number
+  /** ISO code of a country, for the region and hotspot maps. */
+  country?: string
+}
+
+/** Requests of one subdivision of a country, keyed by its ISO 3166-2 code. */
+export interface RegionMapData {
+  code: string
+  value: number
+  percent: number
+}
+
+/** One city of the hotspot map. */
+export interface CityPointData {
+  country: string
+  city: string
+  lat: number
+  lon: number
+  value: number
+  percent: number
 }
 
 export interface AccessLogEntry {
