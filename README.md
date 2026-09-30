@@ -39,8 +39,17 @@ bun test tests       # the bundle tests read dist/, build it first
 bun run i18n         # the translation catalogs, from the NGINX UI catalogs
 ```
 
-`@nginxui/plugin-sdk` resolves to a checkout of `plugin-sdk-web` next to this
-repository. `bun run i18n` reads the catalogs of a checkout of `nginx-ui` next
+`@nginxui/plugin-sdk` comes from npm. Until it is published there, `bun.lock`
+names only its version range and installs fail; once it is out, run
+`bun install` and commit `bun.lock`. To work against a local checkout of
+`plugin-sdk-web`, link it once; `package.json` and `bun.lock` stay as they are:
+
+```
+(cd ../plugin-sdk-web && bun install && bun run build && bun link)
+bun link @nginxui/plugin-sdk
+```
+
+`bun run i18n` reads the catalogs of a checkout of `nginx-ui` next
 to it, or of `NGINX_UI_LANGUAGE_DIR`.
 
 ## Map data

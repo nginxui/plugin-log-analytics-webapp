@@ -1,0 +1,83 @@
+name: Release
+
+# Publishes the webapp archive when a version tag is pushed. The tag must
+# match package.json, e.g. v0.2.0 for "version": "0.2.0". The release carries
+# the archive and its .sha256 file, which the build.sh of both plugins checks
+# a download against. The notes are the section of CHANGELOG.md for the
+# version, or generated when there is none.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: The tag matches package.json
+        run: |
+          version="$(bun -e "console.log(require('./package.json').version)")"
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match package.json version ${version}" >&2
+            exit 1
+          fi
+
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run build
+      - run: bun run test
+
+      - name: Package every plugin
+        run: bun run package
+
+      - name: Release notes
+        id: notes
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          notes="${RUNNER_TEMP}/notes.md"
+          if [ -f CHANGELOG.md ]; then
+            awk -v heading="## [${version}]" '
+              /^## / { on = index($0, heading) == 1; next }
+              on { print }
+            ' CHANGELOG.md >"${notes}"
+          fi
+          if [ -s "${notes}" ] && grep -q '[^[:space:]]' "${notes}"; then
+            echo "path=${notes}" >>"${GITHUB_OUTPUT}"
+          else
+            echo "CHANGELOG.md has no section for ${version}, the notes will be generated"
+          fi
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ steps.notes.outputs.path }}
+        run: |
+          set -euo pipefail
+          if [ -n "${NOTES}" ]; then
+            notes=(--notes-file "${NOTES}")
+          else
+            notes=(--generate-notes)
+          fi
+          gh release create "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --verify-tag \
+            --title "${GITHUB_REF_NAME}" \
+            "${notes[@]}" \
+            release/*.tar.gz release/*.tar.gz.sha256
+
+      - name: Next step
+        run: |
+          {
+            echo "Released ${GITHUB_REF_NAME}. Set version=${GITHUB_REF_NAME#v} in the webapp.lock of"
+            echo "nginxui/plugin-log-analytics and nginxui/plugin-log-analytics-tantivy."
+          } >>"${GITHUB_STEP_SUMMARY}"

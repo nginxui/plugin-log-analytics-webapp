@@ -1,0 +1,34 @@
+name: CI
+
+# Runs on every pull request and on main: lint, types, the build and its tests,
+# and the release archive. The SDK comes from npm as @nginxui/plugin-sdk.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run typecheck
+
+      # The bundle tests read dist/
+      - run: bun run build
+      - run: bun run test
+
+      - name: Package every plugin
+        run: bun run package
