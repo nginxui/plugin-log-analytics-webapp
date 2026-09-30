@@ -150,6 +150,8 @@ const mapOption = computed((): EChartsOption => {
         type: 'map',
         map: 'world',
         roam: false,
+        // The default layout keeps the aspect but fills only 80% of the chart
+        zoom: 1.2,
         emphasis: {
           label: {
             show: true,
@@ -262,9 +264,9 @@ const columns = computed(() => {
 
     <div v-else class="world-map-container">
       <!-- Data layout: side by side on large screens, stacked on small screens -->
-      <div class="la-grid la-grid-cols-1 lg:la-grid-cols-2 la-gap-6">
+      <div class="la-grid la-grid-cols-1 lg:la-grid-cols-5 la-gap-6">
         <!-- Map on left (or top on small screens) -->
-        <div class="lg:la-col-span-1">
+        <div class="lg:la-col-span-3">
           <VChart
             ref="chartRef"
             :option="mapOption"
@@ -275,7 +277,7 @@ const columns = computed(() => {
         </div>
 
         <!-- Table on right (or bottom on small screens) -->
-        <div class="lg:la-col-span-1 la-flex la-flex-col la-justify-center">
+        <div class="lg:la-col-span-2 la-flex la-flex-col la-justify-center">
           <div class="table-title">
             {{ $gettext('Top 10 Countries / Regions') }}
           </div>

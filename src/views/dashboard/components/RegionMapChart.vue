@@ -130,6 +130,8 @@ const option = computed((): EChartsOption => {
       // Opens on the main territory, overseas regions are reached by dragging
       boundingCoords: view.value,
       roam: true,
+      // The default layout keeps the aspect but fills only 80% of the chart
+      zoom: 1.2,
       emphasis: {
         label: { show: true, color: style.value.fontColor, formatter: (p: { name: string }) => regionName(p.name) },
         itemStyle: { areaColor: style.value.emphasisColor },
@@ -170,9 +172,9 @@ const columns = computed(() => [
       <div v-if="failed || (!loading && drawn.length === 0)" class="la-flex la-items-center la-justify-center" style="height: 300px">
         <AEmpty :description="failed ? $gettext('The regions of this country could not be loaded') : $gettext('No geographic data available')" />
       </div>
-      <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-2 la-gap-6">
-        <VChart :option="option" style="height: 400px; width: 100%" autoresize />
-        <div class="la-flex la-flex-col la-justify-center">
+      <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-5 la-gap-6">
+        <VChart class="lg:la-col-span-3" :option="option" style="height: 400px; width: 100%" autoresize />
+        <div class="lg:la-col-span-2 la-flex la-flex-col la-justify-center">
           <div class="la-mb-3 la-text-sm la-font-bold">
             {{ $gettext('Top 10 Regions') }}
           </div>

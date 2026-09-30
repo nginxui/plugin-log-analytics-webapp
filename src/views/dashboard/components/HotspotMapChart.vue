@@ -95,6 +95,8 @@ const option = computed((): EChartsOption => {
     geo: {
       map: 'world',
       roam: true,
+      // The default layout keeps the aspect but fills only 80% of the chart
+      zoom: 1.2,
       itemStyle: { areaColor: style.value.areaColor, borderColor: style.value.borderColor, borderWidth: 0.5 },
       emphasis: { disabled: true },
     },
@@ -138,9 +140,9 @@ const columns = computed(() => [
     <div v-if="!loading && points.length === 0" class="la-flex la-items-center la-justify-center" style="height: 300px">
       <AEmpty :description="$gettext('No city data available')" />
     </div>
-    <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-2 la-gap-6">
-      <VChart :option="option" style="height: 400px; width: 100%" autoresize />
-      <div class="la-flex la-flex-col la-justify-center">
+    <div v-else class="la-grid la-grid-cols-1 lg:la-grid-cols-5 la-gap-6">
+      <VChart class="lg:la-col-span-3" :option="option" style="height: 400px; width: 100%" autoresize />
+      <div class="lg:la-col-span-2 la-flex la-flex-col la-justify-center">
         <div class="la-mb-3 la-text-sm la-font-bold">
           {{ $gettext('Top 10 Cities') }}
         </div>
