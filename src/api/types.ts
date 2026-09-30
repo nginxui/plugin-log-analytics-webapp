@@ -161,6 +161,14 @@ export interface PreflightResponse {
     size?: number
     last_modified?: number
   }
+  /** What the plugin behind the webapp supports beyond the common API. */
+  features?: PluginFeatures
+}
+
+/** Features only some of the log analytics plugins have. */
+export interface PluginFeatures {
+  /** The search box reads field filters such as `status:5xx`. */
+  query_syntax?: boolean
 }
 
 export interface DashboardRequest {

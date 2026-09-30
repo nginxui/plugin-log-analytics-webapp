@@ -8,7 +8,11 @@ import { $gettext } from '@/gettext'
 import { browserOptions, deviceOptions, emptySearchFilters, levelOptions, methodOptions, osOptions, statusOptions } from './search-filter-options'
 import SearchSyntaxHelp from './SearchSyntaxHelp.vue'
 
-const { kind = 'access' } = defineProps<{ kind?: LogKind }>()
+const { kind = 'access', syntaxHelp = false } = defineProps<{
+  kind?: LogKind
+  /** The plugin reads field filters in the search box, so their help is shown. */
+  syntaxHelp?: boolean
+}>()
 
 const emit = defineEmits<Emits>()
 
@@ -59,7 +63,7 @@ function handleReset() {
         <div class="lg:la-col-span-2">
           <label class="la-block la-text-xs la-font-medium la-text-gray-700 dark:la-text-trueGray-300 la-mb-1">
             {{ $gettext('Full Text Search') }}
-            <SearchSyntaxHelp :kind="kind" />
+            <SearchSyntaxHelp v-if="syntaxHelp" :kind="kind" />
           </label>
           <AInput
             v-model:value="filters.query"

@@ -765,6 +765,7 @@ watch(timeRange, () => {
         <SearchFilters
           v-model="searchFilters"
           :kind="isErrorLog ? 'error' : 'access'"
+          :syntax-help="preflightResponse?.features?.query_syntax === true"
           class="la-mb-6"
           @search="performAdvancedSearch"
           @reset="resetSearchFilters"
