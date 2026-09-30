@@ -17,9 +17,12 @@ bun run package      # release/plugin-log-analytics-webapp-<version>.tar.gz
 
 The archive holds one directory per plugin id with `main.js`, `style.css`,
 `icon.svg`, `chunks/`, `assets/` and `manifest.webapp.json`, and a `.sha256`
-file sits next to it. A plugin names the release it packages in its
-`webapp.lock`, and its `build.sh` unpacks its own directory into
-`webapp/dist`. For a single build, `PLUGIN_ID=<id> OUT_DIR=<dir> bun run build`.
+file sits next to it. A release `v<version>` publishes both files: a plugin
+names the version it packages in its `webapp.lock`, and its `build.sh`
+downloads the archive, checks it against the `.sha256` file and unpacks its own
+directory into `webapp/dist`. After a release, change the version in the
+`webapp.lock` of both plugins. A local build of a plugin takes the archive of a
+checkout next to it. For a single build, `PLUGIN_ID=<id> OUT_DIR=<dir> bun run build`.
 
 ## Differences between the plugins
 
