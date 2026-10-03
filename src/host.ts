@@ -3,8 +3,27 @@
 import type { PluginHttpClient } from '@nginxui/plugin-sdk'
 import { requireRegistry } from './runtime'
 
+/**
+ * The plugin http client. Each request names the language of the host, so the
+ * backend answers place names in it rather than in the browser's language.
+ */
 export function getHttp(): PluginHttpClient {
-  return requireRegistry().http
+  const { http, host } = requireRegistry()
+  const withLanguage = (config?: Record<string, unknown>): Record<string, unknown> => {
+    // A host without a locale, like the one the tests set up, sends none
+    const locale = host?.locale
+    if (!locale)
+      return config ?? {}
+    return { ...config, headers: { ...(config?.headers as Record<string, string> | undefined), 'X-Language': locale } }
+  }
+  return {
+    get: (url, config) => http.get(url, withLanguage(config)),
+    post: (url, data, config) => http.post(url, data, withLanguage(config)),
+    put: (url, data, config) => http.put(url, data, withLanguage(config)),
+    patch: (url, data, config) => http.patch(url, data, withLanguage(config)),
+    delete: (url, config) => http.delete(url, withLanguage(config)),
+    request: config => http.request(withLanguage(config)),
+  }
 }
 
 export function getTheme(): 'light' | 'dark' {

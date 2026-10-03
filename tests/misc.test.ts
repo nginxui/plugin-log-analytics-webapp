@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { extractMsgids, parsePo } from '../scripts/po'
 import { encodePathParam, warm } from '../src/api/client'
 import { errorCode, errorMessage, isPathError } from '../src/errors'
-import { openPluginSocket } from '../src/host'
+import { getHttp, openPluginSocket } from '../src/host'
 import { getRuntime, setRegistry } from '../src/runtime'
 import { bytesToSize, formatDateTime, formatDuration, formatProgressTime, isErrorLogPath } from '../src/utils'
 
@@ -43,6 +43,26 @@ describe('plugin websockets', () => {
 
     await expect(openPluginSocket('/events')).rejects.toThrow('websockets')
     expect(opened).toEqual([])
+  })
+})
+
+describe('plugin http', () => {
+  test('names the language of the host, which the place names follow', async () => {
+    const configs: unknown[] = []
+    setRegistry({
+      http: {
+        get: async (_url: string, config: unknown) => configs.push(config),
+        post: async (_url: string, _data: unknown, config: unknown) => configs.push(config),
+      },
+      host: { locale: 'zh_TW' },
+    } as unknown as PluginRegistry)
+
+    await getHttp().get('/logs/status')
+    await getHttp().post('/search', {}, { headers: { 'X-Other': '1' } })
+    expect(configs).toEqual([
+      { headers: { 'X-Language': 'zh_TW' } },
+      { headers: { 'X-Other': '1', 'X-Language': 'zh_TW' } },
+    ])
   })
 })
 
