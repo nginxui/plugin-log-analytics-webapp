@@ -232,6 +232,26 @@ def polygons_of(geom):
     return [geom["coordinates"]] if geom["type"] == "Polygon" else geom["coordinates"]
 
 
+def merge_codes(features):
+    """Joins the features that share a code into one, like Lord Howe Island,
+    which Natural Earth gives the code of New South Wales. The largest names
+    the region, a map keyed by code would show only one of them otherwise."""
+    by_code = {}
+    for f in features:
+        by_code.setdefault(f["properties"]["code"], []).append(f)
+    out = []
+    for members in by_code.values():
+        if len(members) == 1:
+            out.append(members[0])
+            continue
+        size = lambda f: sum(area(p[0]) for p in polygons_of(f["geometry"]))
+        largest = max(members, key=size)
+        polys = [p for f in members for p in polygons_of(f["geometry"])]
+        out.append({"type": "Feature", "properties": largest["properties"],
+                    "geometry": {"type": "MultiPolygon", "coordinates": polys}})
+    return out
+
+
 def unwrap(features):
     """Moves the polygons across the antimeridian to the side most of the
     country lies on, so the Aleutians sit next to Alaska and Chukotka next to
@@ -497,6 +517,7 @@ def main(src, dst, gb_dir=None):
             out.append({"type": "Feature", "properties": props, "geometry": g})
         if not out:
             continue
+        out = merge_codes(out)
         unwrap(out)
         view, frames = layout(out)
         # Frames come first so the regions inside them are drawn on top
