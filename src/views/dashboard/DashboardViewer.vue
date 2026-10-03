@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { AnalyticsRequest, DashboardAnalytics, DashboardRequest, WorldMapData } from '@/api/types'
 import { App, Col, Row } from 'antdv-next'
-import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import { getDashboardAnalytics, getPreflight, getWorldMapData } from '@/api/client'
 import LoadingState from '@/components/LoadingState.vue'
+import dayjs from '@/dayjs'
 import { errorMessage } from '@/errors'
 import BrowserStatsTable from './components/BrowserStatsTable.vue'
 import DailyTrendsChart from './components/DailyTrendsChart.vue'

@@ -2,8 +2,8 @@
 import type { MenuProps } from 'antdv-next'
 import { DownOutlined, ReloadOutlined } from '@antdv-next/icons'
 import { Button as AButton, Dropdown as ADropdown, Menu as AMenu, Space as ASpace, Card, DatePicker } from 'antdv-next'
-import dayjs from 'dayjs'
 import { computed } from 'vue'
+import dayjs from '@/dayjs'
 import { $gettext } from '@/gettext'
 
 defineProps<{

@@ -18,10 +18,10 @@ import {
   DatePicker,
   Tag,
 } from 'antdv-next'
-import dayjs from 'dayjs'
 import { computed, h, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { getPreflight, search } from '@/api/client'
 import LoadingState from '@/components/LoadingState.vue'
+import dayjs from '@/dayjs'
 import { errorMessage, isPathError } from '@/errors'
 import { $gettext, currentLanguage } from '@/gettext'
 import { useStatus } from '@/store/status'
