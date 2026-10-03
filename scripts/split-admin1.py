@@ -9,11 +9,13 @@ lacks their current regions. Each feature keeps its ISO 3166-2 code and the name
 host. Geometry is simplified with Douglas-Peucker and rounded to 3 decimals.
 Hong Kong, Macau and Taiwan are regions of the China map, CN-HK, CN-MO and
 CN-TW, as the plugins count them under CN. Polygons across the antimeridian
-are moved to the side of the country, and each file names the box of the main
-territory in "view", the first view of the map, and in "aspect" the width of a
-degree of longitude there. Regions wholly
-outside the main territory are moved into framed insets next to it; the frames
-are features with "frame" set.
+are moved to the side of the country. The main territory is drawn in an Albers
+equal-area conic projection fitted to it, and each file names its box in
+"view", the first view of the map. Regions wholly outside the main territory
+are drawn in projections of their own and moved into framed insets next to
+it; the frames are features with "frame" set. Coordinates stay near the
+longitude and latitude of the place, so the maps are drawn without a further
+projection.
 """
 import json
 import math
@@ -303,6 +305,38 @@ INSET_SHARE = 0.28
 INSET_GAP = 0.05
 
 
+def albers(box):
+    """An Albers equal-area conic projection fitted to a box of longitude and
+    latitude, with its standard parallels a sixth of the height inside the
+    edges. It maps a point to x and y in degrees of a great circle, offset to
+    the center of the box. Close to the equator the cone flattens into a
+    cylinder, there the box is drawn equirectangular at its middle latitude."""
+    west, south, east, north = box
+    lon0, lat0 = (west + east) / 2, (south + north) / 2
+    p1 = math.radians(south + (north - south) / 6)
+    p2 = math.radians(north - (north - south) / 6)
+    n = (math.sin(p1) + math.sin(p2)) / 2
+    if abs(n) < 0.05:
+        k = math.cos(math.radians(lat0))
+        return lambda lon, lat: (lon0 + (lon - lon0) * k, lat)
+    c = math.cos(p1) ** 2 + 2 * n * math.sin(p1)
+    rho0 = math.sqrt(c - 2 * n * math.sin(math.radians(lat0))) / n
+
+    def project(lon, lat):
+        rho = math.sqrt(max(0.0, c - 2 * n * math.sin(math.radians(lat)))) / n
+        theta = n * math.radians(lon - lon0)
+        return lon0 + math.degrees(rho * math.sin(theta)), lat0 + math.degrees(rho0 - rho * math.cos(theta))
+    return project
+
+
+def transform(feature, project):
+    for poly in polygons_of(feature["geometry"]):
+        for r in poly:
+            for pt in r:
+                x, y = project(pt[0], pt[1])
+                pt[0], pt[1] = round(x, 3), round(y, 3)
+
+
 def move(feature, box, scale, target):
     """Scales a feature around the center of box and moves it to target."""
     cx, cy = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
@@ -324,7 +358,9 @@ def layout(features, reach=3.0):
     """Finds the main territory and moves the regions that lie wholly outside
     of it, such as Alaska, Hawaii or French Guiana, into framed insets next to
     it. Polygons closer than reach degrees form groups and the group with the
-    largest area is the main territory. Returns the view box, the aspect of the map and the frames."""
+    largest area is the main territory. The main territory and each inset are
+    projected with an Albers projection of their own, so every part keeps its
+    shape. Returns the view box and the frames."""
     parts = [(fi, p) for fi, f in enumerate(features) for p in polygons_of(f["geometry"])]
     boxes = [bounds(p[0]) for _, p in parts]
     groups = cluster(boxes, reach)
@@ -335,7 +371,7 @@ def layout(features, reach=3.0):
     # Borneo, are part of the main territory too
     largest = max(totals.values())
     main = {g for g, total in totals.items() if total >= largest * MAIN_SHARE}
-    west, south, east, north = union([b for i, b in enumerate(boxes) if groups[i] in main])
+    main_box = union([b for i, b in enumerate(boxes) if groups[i] in main])
 
     in_main = {fi for i, (fi, _) in enumerate(parts) if groups[i] in main}
     outlying = [fi for fi in range(len(features)) if fi not in in_main]
@@ -345,12 +381,23 @@ def layout(features, reach=3.0):
         insets.setdefault(g, []).append(fi)
     insets = sorted((union([feature_boxes[fi] for fi in members]), members) for members in insets.values())
 
-    # A degree of longitude is cos(latitude) of a degree of latitude
-    aspect = round(max(0.3, math.cos(math.radians((north + south) / 2))), 3)
+    project = albers(main_box)
+    for fi in in_main:
+        transform(features[fi], project)
+    # Polygons are projected in place, the parts see the new coordinates
+    west, south, east, north = union([bounds(p[0]) for i, (_, p) in enumerate(parts) if groups[i] in main])
+    projected = []
+    for box, members in insets:
+        project = albers(box)
+        for fi in members:
+            transform(features[fi], project)
+        projected.append((union([bounds(p[0]) for fi in members for p in polygons_of(features[fi]["geometry"])]), members))
+    insets = projected
+
     frames = []
     if 0 < len(insets) <= MAX_INSETS:
         width, height = east - west, north - south
-        if width * aspect >= height:
+        if width >= height:
             cell, space = INSET_SHARE * height, INSET_GAP * height
             x, top = west, south - space
             for box, members in insets:
@@ -377,7 +424,7 @@ def layout(features, reach=3.0):
         west, south = min(west, *(f["geometry"]["coordinates"][0][0][0] for f in frames)), south
         east = max(east, *(f["geometry"]["coordinates"][0][1][0] for f in frames))
     # Top left and bottom right, as boundingCoords of ECharts takes them
-    return [[round(west, 2), round(north, 2)], [round(east, 2), round(south, 2)]], aspect, frames
+    return [[round(west, 2), round(north, 2)], [round(east, 2), round(south, 2)]], frames
 
 
 def geoboundaries(directory):
@@ -451,9 +498,9 @@ def main(src, dst, gb_dir=None):
         if not out:
             continue
         unwrap(out)
-        view, aspect, frames = layout(out)
+        view, frames = layout(out)
         # Frames come first so the regions inside them are drawn on top
-        collection = {"type": "FeatureCollection", "view": view, "aspect": aspect, "features": frames + out}
+        collection = {"type": "FeatureCollection", "view": view, "features": frames + out}
         text = json.dumps(collection, ensure_ascii=False, separators=(",", ":"))
         with open(os.path.join(dst, f"{cc}.json"), "w", encoding="utf-8") as fh:
             fh.write(text)

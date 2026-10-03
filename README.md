@@ -92,12 +92,15 @@ files into the region files:
 - The main territory of a country opens the map. Regions wholly outside of it,
   such as Alaska, Hawaii or French Guiana, are moved into framed insets next to
   it.
+- The main territory and each inset are drawn in an Albers equal-area conic
+  projection fitted to them, so northern and southern regions keep their
+  shape. Close to the equator the projection is equirectangular. The projected
+  coordinates stay near the longitude and latitude of the place.
 - Outlines are simplified and rounded to three decimals.
 
-Each file is a GeoJSON FeatureCollection with two extra members that
+Each file is a GeoJSON FeatureCollection with an extra member that
 `RegionMapChart` reads: `view`, the top left and bottom right corners of the
-first view, and `aspect`, the width of a degree of longitude at the latitude
-of the country. A feature carries `code`, `name` and `name_<language>`; the
+first view in projected coordinates. A feature carries `code`, `name` and `name_<language>`; the
 frames of the insets are features with `frame` set and are not counted.
 
 ### Checking the codes

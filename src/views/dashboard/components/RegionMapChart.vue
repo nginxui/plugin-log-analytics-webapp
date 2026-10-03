@@ -31,8 +31,8 @@ use([MapChart, TooltipComponent, VisualMapComponent, CanvasRenderer])
 interface OutlineFeature { properties: Record<string, unknown> }
 /** The top left and bottom right corners of the main territory. */
 type View = [[number, number], [number, number]]
-interface Outline { view?: View, aspect?: number, features: OutlineFeature[] }
-interface Known { regions: Map<string, Record<string, unknown>>, frames: string[], view?: View, aspect?: number }
+interface Outline { view?: View, features: OutlineFeature[] }
+interface Known { regions: Map<string, Record<string, unknown>>, frames: string[], view?: View }
 
 const style = useMapStyle()
 const hostLocale = useHostLocale()
@@ -42,7 +42,6 @@ const { translateCountry } = useGeoTranslation()
 const registered = new Map<string, Known>()
 const regions = ref<Map<string, Record<string, unknown>> | null>(null)
 const view = ref<View>()
-const aspect = ref<number>()
 const frames = ref<string[]>([])
 const data = ref<RegionMapData[]>([])
 const loading = ref(false)
@@ -69,7 +68,6 @@ async function load() {
         regions: new Map(outline.features.filter(f => !isFrame(f)).map(f => [String(f.properties.code), f.properties])),
         frames: outline.features.filter(isFrame).map(f => String(f.properties.code)),
         view: outline.view,
-        aspect: outline.aspect,
       }
       registered.set(country, known)
     }
@@ -86,7 +84,6 @@ async function load() {
     shownMap.value = `admin1-${country}`
     regions.value = known.regions
     view.value = known.view
-    aspect.value = known.aspect
     frames.value = known.frames
     data.value = answer.data ?? []
   }
@@ -159,8 +156,8 @@ const option = computed((): EChartsOption => {
       nameProperty: 'code',
       // Opens on the main territory with the insets of outlying regions
       boundingCoords: view.value,
-      // Longitude shrinks with the latitude of the country, 0.75 is the ECharts default
-      aspectScale: aspect.value ?? 0.75,
+      // The outlines are projected already, see split-admin1.py
+      aspectScale: 1,
       roam: true,
       // The default layout keeps the aspect but fills only 80% of the chart
       zoom: 1.2,
