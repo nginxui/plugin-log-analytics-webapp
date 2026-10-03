@@ -409,6 +409,10 @@ const structuredLogColumns = computed(() => [
 
 const tableColumns = computed(() => isErrorLog.value ? errorLogColumns.value : structuredLogColumns.value)
 
+// The table scrolls sideways only when the columns do not fit. A wider scroll
+// width than the columns need stretches every column, the IP most visibly.
+const tableScrollWidth = computed(() => tableColumns.value.reduce((sum, column) => sum + (column.width ?? 0), 0))
+
 // Time range presets (Grafana-style)
 const timePresets = [
   { key: 'last-15-minutes', label: () => $gettext('Last 15 minutes'), value: () => ({ start: dayjs().subtract(15, 'minute'), end: dayjs() }) },
@@ -889,7 +893,7 @@ watch(timeRange, () => {
               }),
             }"
             size="small"
-            :scroll="{ x: isErrorLog ? 1400 : 2400 }"
+            :scroll="{ x: tableScrollWidth }"
             :columns="tableColumns"
             :expandable="expandable"
             row-key="key"
