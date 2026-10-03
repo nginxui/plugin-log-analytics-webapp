@@ -58,7 +58,10 @@ export interface RegionMapData {
 /** One city of the hotspot map. */
 export interface CityPointData {
   country: string
+  /** The English name of the city, see places.ts for the others. */
   city: string
+  /** GeoNames id of the city, absent in data indexed before it was kept. */
+  city_id?: number
   lat: number
   lon: number
   value: number
@@ -70,8 +73,12 @@ export interface AccessLogEntry {
   ip: string
   method: string
   region_code: string
+  /** English names of the region and city of the client, see places.ts. */
   province: string
   city: string
+  /** ISO 3166-2 code of the region and GeoNames id of the city. */
+  sub1?: string
+  city_id?: number
   c1?: string
   c2?: string
   c3?: string

@@ -34,6 +34,7 @@
     "antdv-next": "1.5.4",
     "eslint": "^10.11.0",
     "happy-dom": "^20.14.5",
+    "opencc-js": "^1.4.2",
     "pinia": "4.0.3",
     "typescript": "^5.9.3",
     "unocss": "^66.10.5",

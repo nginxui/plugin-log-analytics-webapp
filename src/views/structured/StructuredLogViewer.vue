@@ -24,6 +24,7 @@ import LoadingState from '@/components/LoadingState.vue'
 import dayjs from '@/dayjs'
 import { errorMessage, isPathError } from '@/errors'
 import { $gettext, currentLanguage } from '@/gettext'
+import { usePlaceNames } from '@/places'
 import { useStatus } from '@/store/status'
 import { bytesToSize } from '@/utils'
 import { emptySearchFilters } from './components/search-filter-options'
@@ -184,11 +185,14 @@ function getSortOrder(fieldName: string): 'ascend' | 'descend' | undefined {
   return undefined
 }
 
+const { cityName, regionName } = usePlaceNames()
+
 function buildLocationLabel(record: AccessLogEntry): string {
   const isChineseLocale = currentLanguage().toLowerCase().startsWith('zh')
-  const displayRegion = isChineseLocale && record.region_code?.trim() === 'CN' ? '中国' : record.region_code
+  const chinaName = currentLanguage() === 'zh_TW' ? '中國' : '中国'
+  const displayRegion = isChineseLocale && record.region_code?.trim() === 'CN' ? chinaName : record.region_code
 
-  const locationParts = [displayRegion, record.province, record.city]
+  const locationParts = [displayRegion, regionName(record.sub1, record.province), cityName(record.city_id, record.city)]
     .map(part => part?.trim())
     .filter((part): part is string => Boolean(part))
 
@@ -196,15 +200,8 @@ function buildLocationLabel(record: AccessLogEntry): string {
     .map(part => part?.trim())
     .filter((part): part is string => Boolean(part))
 
-  const baseLabel = locationParts.join(' · ')
-  if (customParts.length === 0)
-    return baseLabel
-
-  const customLabel = customParts.join(' · ')
-  if (!baseLabel)
-    return customLabel
-
-  return `${baseLabel} · ${customLabel}`
+  // Chinese names read as one phrase with spaces, others as a list
+  return [...locationParts, ...customParts].join(isChineseLocale ? ' ' : ', ')
 }
 
 // Colors of the error log levels, the most severe in red
@@ -307,7 +304,8 @@ const structuredLogColumns = computed(() => [
     sorter: true,
     sortOrder: getSortOrder('ip'),
     render: (_value: unknown, record: AccessLogEntry) => {
-      const locationLabel = (record.ip_location_label || '').trim() || buildLocationLabel(record)
+      // Built here rather than taken from ip_location_label, which has the English names
+      const locationLabel = buildLocationLabel(record)
 
       return h('div', { class: 'la-flex la-items-center la-gap-2' }, [
         locationLabel ? h(Tag, { color: 'blue', size: 'small' }, { default: () => locationLabel }) : null,

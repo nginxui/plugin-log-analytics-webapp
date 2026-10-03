@@ -10,7 +10,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import VChart from 'vue-echarts'
 import { getCityPoints } from '@/api/client'
 import { fetchAssetJson } from '@/assets'
-import { $gettext } from '@/gettext'
+import { $gettext, currentLanguage } from '@/gettext'
+import { usePlaceNames } from '@/places'
 import { useGeoTranslation } from '../geo'
 import { tooltipHtml, useMapStyle } from './mapStyle'
 
@@ -68,8 +69,13 @@ async function load() {
 
 watch(() => [props.logPath, props.startTime, props.endTime], load, { immediate: true })
 
+const { cityName } = usePlaceNames()
+
 function placeOf(point: CityPointData): string {
-  return `${point.city} · ${translateCountry(point.country)}`
+  const country = translateCountry(point.country)
+  const city = cityName(point.city_id, point.city)
+  // Chinese puts the country first, other languages after the city
+  return currentLanguage().toLowerCase().startsWith('zh') ? `${country} ${city}` : `${city}, ${country}`
 }
 
 const option = computed((): EChartsOption => {

@@ -58,7 +58,7 @@ The dashboard draws three maps: the world by country, the regions of one
 country after a click on it, and the busiest cities. `public/assets/world.json`
 holds the country outlines. The region outlines are in `public/assets/admin1/`,
 one file per country, loaded when the country is opened. They add about
-1.3 MiB to the compressed archive.
+1.3 MiB to the compressed archive, the place names below about 2.8 MiB.
 
 ### Sources
 
@@ -103,6 +103,34 @@ Each file is a GeoJSON FeatureCollection with an extra member that
 first view in projected coordinates. A feature carries `code`, `name` and `name_<language>`; the
 frames of the insets are features with `frame` set and are not counted.
 
+### Place names
+
+The backends answer the English names of a visitor's region and city, with the
+ISO 3166-2 code of the region and the GeoNames id of the city. The page names
+them in the language of the host from `public/assets/places/<locale>.json`,
+fetched once for the current language. Each file holds `cities`, names by
+GeoNames id, and `regions`, names by code; a place it lacks keeps its English
+name.
+
+- City names come from [Wikidata](https://www.wikidata.org/), CC0, whose
+  items name their GeoNames id in property P1566, the id GeoLite2 gives a city.
+  Some large cities link another GeoNames feature there, the district rather
+  than the town, so the alternate names of
+  [GeoNames](https://www.geonames.org/), CC BY 4.0, fill in after Wikidata. In
+  the Latin script GeoNames counts only with a name it marks preferred, its
+  other names are often old or local spellings. Traditional Chinese takes the
+  names used in Taiwan, then other traditional names, and converts the
+  simplified name with [OpenCC](https://github.com/BYVoid/OpenCC) (s2twp) for
+  the rest. The names the GeoLite2 database itself carries are not shipped,
+  its license does not allow it.
+- `scripts/fetch-city-names.py` lists the cities of a GeoLite2 City database,
+  asks Wikidata for their labels and reads the GeoNames dump. This happens
+  here, when the files are built; the plugins never fetch these sources.
+- Region names are the `name_<language>` members of the region outlines.
+
+`scripts/build-place-names.ts` writes the files from the cache the fetch script
+leaves and the region outlines.
+
 ### Checking the codes
 
 A region the outline lacks is counted but not drawn. Two checks find these:
@@ -123,7 +151,9 @@ The data rarely changes. Update it when:
 - ISO 3166-2 revises the subdivisions of a country and the GeoLite2 database
   follows, which the check reports as new gaps;
 - Natural Earth publishes a new release;
-- the rules of the split script change.
+- the rules of the split script change;
+- the GeoLite2 database has gained many cities the place names lack, or
+  Wikidata many names, which only the place names need.
 
 ### Updating
 
@@ -165,5 +195,16 @@ The data rarely changes. Update it when:
    python3 scripts/check-admin1.py --write-baseline GeoLite2-City.mmdb public/assets/admin1
    ```
 
-6. Open a few changed countries on the dashboard, then release the webapp and
+6. Download `alternateNamesV2.zip` from the
+   [GeoNames dump](https://download.geonames.org/export/dump/), about 200 MB,
+   and collect the city names. Asking Wikidata takes a quarter of an hour and
+   resumes where an interrupted run stopped. Then build the place names from
+   them and the region files:
+
+   ```
+   python3 scripts/fetch-city-names.py GeoLite2-City.mmdb city-names.json --geonames alternateNamesV2.zip
+   bun scripts/build-place-names.ts city-names.json public/assets/admin1 public/assets/places
+   ```
+
+7. Open a few changed countries on the dashboard, then release the webapp and
    update the `webapp.lock` of both plugins.

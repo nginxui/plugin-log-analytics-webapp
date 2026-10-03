@@ -2,8 +2,10 @@ import type { PluginRegistry } from '@nginxui/plugin-sdk'
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { extractMsgids, parsePo } from '../scripts/po'
 import { encodePathParam, warm } from '../src/api/client'
+import { setAssetBase } from '../src/assets'
 import { errorCode, errorMessage, isPathError } from '../src/errors'
 import { getHttp, openPluginSocket } from '../src/host'
+import { usePlaceNames } from '../src/places'
 import { getRuntime, setRegistry } from '../src/runtime'
 import { bytesToSize, formatDateTime, formatDuration, formatProgressTime, isErrorLogPath } from '../src/utils'
 
@@ -63,6 +65,43 @@ describe('plugin http', () => {
       { headers: { 'X-Language': 'zh_TW' } },
       { headers: { 'X-Other': '1', 'X-Language': 'zh_TW' } },
     ])
+  })
+})
+
+describe('place names', () => {
+  const realFetch = globalThis.fetch
+  const fetched: string[] = []
+
+  beforeEach(() => {
+    fetched.length = 0
+    globalThis.fetch = (async (url: string) => {
+      fetched.push(url)
+      return new Response(JSON.stringify({ cities: { 4174757: 'タンパ' }, regions: { 'US-FL': 'フロリダ州' } }))
+    }) as unknown as typeof fetch
+    setAssetBase('https://ui.example.com/plugins/x/webapp/dist/main.js')
+  })
+
+  afterEach(() => {
+    globalThis.fetch = realFetch
+  })
+
+  test('name a place in the language of the host and keep the English name otherwise', async () => {
+    setRegistry({ host: { locale: 'ja_JP' } } as unknown as PluginRegistry)
+    const { cityName, regionName } = usePlaceNames()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(fetched).toEqual(['https://ui.example.com/plugins/x/webapp/dist/assets/places/ja_JP.json'])
+    expect(cityName(4174757, 'Tampa')).toBe('タンパ')
+    expect(regionName('US-FL', 'Florida')).toBe('フロリダ州')
+    expect(cityName(2774295, 'Klaus')).toBe('Klaus')
+    expect(cityName(undefined, 'Tampa')).toBe('Tampa')
+  })
+
+  test('fetch nothing for English', () => {
+    setRegistry({ host: { locale: 'en' } } as unknown as PluginRegistry)
+    const { cityName } = usePlaceNames()
+    expect(cityName(4174757, 'Tampa')).toBe('Tampa')
+    expect(fetched).toEqual([])
   })
 })
 

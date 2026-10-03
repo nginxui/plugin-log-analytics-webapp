@@ -13,3 +13,12 @@ administrative boundaries. PLoS ONE 15(4): e0231866.
 https://www.geoboundaries.org/
 
 Region names: Wikidata, CC0. https://www.wikidata.org/
+
+City names in the languages of the page: Wikidata, CC0, matched by GeoNames
+id, and the alternate names of GeoNames, CC BY 4.0, where Wikidata has none.
+https://www.wikidata.org/
+GeoNames (https://www.geonames.org/), licensed under CC BY 4.0
+(https://creativecommons.org/licenses/by/4.0/). Names selected per language.
+Traditional Chinese names neither source has are converted from the
+simplified ones with OpenCC (Apache License 2.0).
+https://github.com/BYVoid/OpenCC
