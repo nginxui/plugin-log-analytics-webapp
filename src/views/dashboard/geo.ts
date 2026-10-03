@@ -17,12 +17,13 @@ export interface GeoData {
   percent: number
 }
 
-// Host locale to the language code of the country name files. Simplified and
-// traditional Chinese share one file.
+// Host locale to the language code of the country name files. Traditional
+// Chinese is converted from the simplified names at build time, see
+// vite.config.ts.
 const LANGUAGE_CODES: Record<string, string> = {
   en: 'en',
   zh_CN: 'zh',
-  zh_TW: 'zh',
+  zh_TW: 'zht',
   fr_FR: 'fr',
   es: 'es',
   de_DE: 'de',
