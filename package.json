@@ -1,7 +1,7 @@
 {
   "name": "plugin-log-analytics-webapp",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Webapp of the NGINX UI log analytics plugins: log list columns, structured search and the traffic dashboard, built for each plugin",
   "scripts": {
