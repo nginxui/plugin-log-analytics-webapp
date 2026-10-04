@@ -39,8 +39,19 @@ const first = (...picks: Pick[]): Pick => city => picks.map(pick => pick(city)?.
 // Names in the Latin script mostly equal the English one, there GeoNames often
 // has an old or a local spelling unless the name is marked preferred
 const gnPreferred = (lang: string): Pick => city => city.geonames_preferred?.includes(lang) ? city.geonames?.[lang] : undefined
+// In the Latin script a city name starts with a capital. A label that does not
+// names something else, such as the district a Wikidata item linked to the
+// GeoNames id of the city stands for ("district de Famagouste"), or is
+// written carelessly.
+const STARTS_LOWER = /^\p{Ll}/u
+function capitalized(pick: Pick): Pick {
+  return city => {
+    const name = pick(city)
+    return name && !STARTS_LOWER.test(name) ? name : undefined
+  }
+}
 const both = (lang: string): Pick => first(wd(lang), gn(lang))
-const latin = (lang: string): Pick => first(wd(lang), gnPreferred(lang))
+const latin = (lang: string): Pick => first(capitalized(wd(lang)), capitalized(gnPreferred(lang)))
 function inSimplified(pick: Pick): Pick {
   return city => {
     const name = pick(city)
@@ -59,7 +70,7 @@ const CITY_NAMES: Record<string, Pick> = {
   it_IT: latin('it'),
   ja_JP: both('ja'),
   ko_KR: both('ko'),
-  pt_PT: first(wd('pt'), wd('pt-br'), gnPreferred('pt'), gnPreferred('pt-BR')),
+  pt_PT: first(...[wd('pt'), wd('pt-br'), gnPreferred('pt'), gnPreferred('pt-BR')].map(capitalized)),
   ru_RU: both('ru'),
   tr_TR: latin('tr'),
   uk_UA: both('uk'),
