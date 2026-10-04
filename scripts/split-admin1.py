@@ -22,17 +22,17 @@ import math
 import os
 import sys
 
-LANGS = ["ar", "de", "en", "es", "fr", "ja", "ko", "pt", "ru", "tr", "uk", "vi", "zh", "zht"]
+LANGS = ["ar", "de", "en", "es", "fr", "it", "ja", "ko", "pt", "ru", "tr", "uk", "vi", "zh", "zht"]
 
 # Regions of the China map drawn from the outlines of their own
 CHINA_REGIONS = {
-    "HK": {"en": "Hong Kong", "ar": "هونغ كونغ", "de": "Hongkong", "es": "Hong Kong", "fr": "Hong Kong",
+    "HK": {"en": "Hong Kong", "ar": "هونغ كونغ", "de": "Hongkong", "es": "Hong Kong", "fr": "Hong Kong", "it": "Hong Kong",
            "ja": "香港", "ko": "홍콩", "pt": "Hong Kong", "ru": "Гонконг", "tr": "Hong Kong", "uk": "Гонконг",
            "vi": "Hồng Kông", "zh": "香港", "zht": "香港"},
-    "MO": {"en": "Macau", "ar": "ماكاو", "de": "Macau", "es": "Macao", "fr": "Macao", "ja": "マカオ",
+    "MO": {"en": "Macau", "ar": "ماكاو", "de": "Macau", "es": "Macao", "fr": "Macao", "it": "Macao", "ja": "マカオ",
            "ko": "마카오", "pt": "Macau", "ru": "Макао", "tr": "Makao", "uk": "Макао", "vi": "Ma Cao",
            "zh": "澳门", "zht": "澳門"},
-    "TW": {"en": "Taiwan", "ar": "تايوان", "de": "Taiwan", "es": "Taiwán", "fr": "Taïwan", "ja": "台湾",
+    "TW": {"en": "Taiwan", "ar": "تايوان", "de": "Taiwan", "es": "Taiwán", "fr": "Taïwan", "it": "Taiwan", "ja": "台湾",
            "ko": "타이완", "pt": "Taiwan", "ru": "Тайвань", "tr": "Tayvan", "uk": "Тайвань", "vi": "Đài Loan",
            "zh": "台湾", "zht": "臺灣"},
 }

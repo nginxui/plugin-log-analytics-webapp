@@ -28,11 +28,11 @@ import zipfile
 ENDPOINT = "https://query.wikidata.org/sparql"
 USER_AGENT = "nginx-ui-log-analytics-place-names/1.0 (https://github.com/nginxui/plugin-log-analytics-webapp)"
 # Wikidata label languages the place files are built from
-LABELS = ["ar", "de", "en", "es", "fr", "ja", "ko", "pt", "pt-br", "ru", "tr", "uk", "vi",
+LABELS = ["ar", "de", "en", "es", "fr", "it", "ja", "ko", "pt", "pt-br", "ru", "tr", "uk", "vi",
           "zh", "zh-cn", "zh-hans", "zh-hant", "zh-hk", "zh-tw"]
 BATCH = 250
 # GeoNames languages the place files are built from
-GEONAMES_LANGUAGES = {"ar", "de", "es", "fr", "ja", "ko", "pt", "pt-BR", "ru", "tr", "uk", "vi",
+GEONAMES_LANGUAGES = {"ar", "de", "es", "fr", "it", "ja", "ko", "pt", "pt-BR", "ru", "tr", "uk", "vi",
                       "zh", "zh-CN", "zh-Hans", "zh-Hant", "zh-HK", "zh-TW"}
 
 
