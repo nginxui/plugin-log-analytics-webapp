@@ -13,7 +13,7 @@ import { OUT_DIR, PLUGIN_ID } from './build.constants'
 
 // Country name files of i18n-iso-countries, one per language the host offers.
 // They ship as static files so a view only fetches the language it shows.
-const COUNTRY_LANGUAGES = ['en', 'zh', 'fr', 'es', 'de', 'ru', 'vi', 'ko', 'tr', 'ar', 'uk', 'ja', 'pt']
+const COUNTRY_LANGUAGES = ['en', 'zh', 'fr', 'es', 'de', 'ru', 'vi', 'ko', 'tr', 'ar', 'uk', 'ja', 'pt', 'it']
 
 // The package has no traditional Chinese names, zht.json converts the
 // simplified ones to the characters and words used in Taiwan

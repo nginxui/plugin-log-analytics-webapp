@@ -35,6 +35,7 @@ const LANGUAGE_CODES: Record<string, string> = {
   uk_UA: 'uk',
   ja_JP: 'ja',
   pt_PT: 'pt',
+  it_IT: 'it',
 }
 
 export function languageCodeOf(locale: string): string {
