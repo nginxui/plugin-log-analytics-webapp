@@ -2,6 +2,7 @@ import ar from './ar.json'
 import de_DE from './de_DE.json'
 import es from './es.json'
 import fr_FR from './fr_FR.json'
+import it_IT from './it_IT.json'
 import ja_JP from './ja_JP.json'
 import ko_KR from './ko_KR.json'
 import pt_PT from './pt_PT.json'
@@ -27,4 +28,5 @@ export const translations: Record<string, Record<string, string>> = {
   uk_UA,
   ja_JP,
   pt_PT,
+  it_IT,
 }

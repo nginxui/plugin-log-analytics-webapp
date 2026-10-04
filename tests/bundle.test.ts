@@ -177,7 +177,7 @@ suite('built bundles', () => {
   })
 
   test('carries translations for every locale of the host', () => {
-    expect(Object.keys(translations).sort()).toEqual(['ar', 'de_DE', 'es', 'fr_FR', 'ja_JP', 'ko_KR', 'pt_PT', 'ru_RU', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW'])
+    expect(Object.keys(translations).sort()).toEqual(['ar', 'de_DE', 'es', 'fr_FR', 'it_IT', 'ja_JP', 'ko_KR', 'pt_PT', 'ru_RU', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW'])
     expect(translations.zh_CN['Index Status']).toBe('索引状态')
     expect(translations.ja_JP.Structured).toBe('構造化')
     expect(translations.zh_TW['Time Range']).toBe('時間範圍')

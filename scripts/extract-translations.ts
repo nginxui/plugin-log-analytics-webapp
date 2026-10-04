@@ -14,9 +14,9 @@ import { extractMsgids, parsePo } from './po'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 // Locales the host ships, see app/i18n.json. English is the source language.
-const LOCALES = ['zh_CN', 'zh_TW', 'fr_FR', 'es', 'de_DE', 'ru_RU', 'vi_VN', 'ko_KR', 'tr_TR', 'ar', 'uk_UA', 'ja_JP', 'pt_PT']
-// Every string must be translated for these, the others may fall back to English.
-const REQUIRED = ['zh_CN', 'zh_TW', 'ja_JP']
+const LOCALES = ['zh_CN', 'zh_TW', 'fr_FR', 'es', 'de_DE', 'ru_RU', 'vi_VN', 'ko_KR', 'tr_TR', 'ar', 'uk_UA', 'ja_JP', 'pt_PT', 'it_IT']
+// Every string must be translated for every locale of the host.
+const REQUIRED = LOCALES
 
 function argValue(name: string): string | undefined {
   const index = process.argv.indexOf(name)
